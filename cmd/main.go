@@ -2,6 +2,7 @@ package main
 
 import (
 	"io/fs"
+	"net/http"
 	"os"
 	"path/filepath"
 	"strings"
@@ -53,6 +54,7 @@ func generateHTML(path string, d fs.DirEntry, err error) error {
 		if err != nil {
 			return err
 		}
+
 	}
 
 	return nil
@@ -63,6 +65,8 @@ func main() {
 	filepath.WalkDir("../documentations and explanations/Prod", generateHTML)
 
 	// Create handler to display each .html file
+	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("../documentations and explanations/Prod"))))
 
 	// Serve content!
+	http.ListenAndServe(":3000", nil)
 }
