@@ -16,7 +16,8 @@ import (
 // Gets path to markdown file, returns converted path to html file
 func convertMarkdownPathToHTMLPath(markdown_path string) string {
 	markdown_path_slice := strings.Split(markdown_path, string(os.PathSeparator))
-	markdown_path_slice[2] = "serve"
+	markdown_path_slice[1] = "web"
+	markdown_path_slice = append(markdown_path_slice[:2], markdown_path_slice[3:]...)
 	markdown_path_replaced_dir := filepath.Join(markdown_path_slice...)
 	return strings.TrimSuffix(markdown_path_replaced_dir, filepath.Ext(markdown_path_replaced_dir)) + ".html"
 }
@@ -82,13 +83,13 @@ func generateHTML(path string, d fs.DirEntry, err error) error {
 
 func main() {
 	// For each .md file, generate a .html file for it
-	err := filepath.WalkDir("../documentations and explanations/Prod", generateHTML)
+	err := filepath.WalkDir("../docs/Prod", generateHTML)
 	if err != nil {
 		logrus.Error(err)
 	}
 
 	// Create handler to display each .html file
-	http.Handle("/", http.FileServer(http.Dir("../documentations and explanations/serve")))
+	http.Handle("/", http.FileServer(http.Dir("/web")))
 
 	// Serve content!
 	err = http.ListenAndServe(":5500", nil)
