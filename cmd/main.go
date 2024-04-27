@@ -5,19 +5,23 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"slices"
 	"strings"
+	"time"
 
 	"github.com/gomarkdown/markdown"
 	"github.com/gomarkdown/markdown/html"
 	"github.com/gomarkdown/markdown/parser"
+	"github.com/gorilla/mux"
 	"github.com/sirupsen/logrus"
+	"github.com/yosssi/gohtml"
 )
 
 // Gets path to markdown file, returns converted path to html file
 func convertMarkdownPathToHTMLPath(markdown_path string) string {
 	markdown_path_slice := strings.Split(markdown_path, string(os.PathSeparator))
 	markdown_path_slice[1] = "web"
-	markdown_path_slice = append(markdown_path_slice[:2], markdown_path_slice[3:]...)
+	markdown_path_slice[2] = "app"
 	markdown_path_replaced_dir := filepath.Join(markdown_path_slice...)
 	return strings.TrimSuffix(markdown_path_replaced_dir, filepath.Ext(markdown_path_replaced_dir)) + ".html"
 }
@@ -35,10 +39,27 @@ func convertMarkdownToHTML(md_contents []byte) []byte {
 	renderer := html.NewRenderer(opts)
 
 	// Convert markdown to HTML
-	return markdown.Render(doc, renderer)
+	html_bytes := markdown.Render(doc, renderer)
+
+	// Read prepend html file
+	prepend_contents, err := os.ReadFile(filepath.Join("..", "web", "template", "prepend.html"))
+	if err != nil {
+		logrus.Fatal(err)
+	}
+
+	// Read append html file
+	append_contents, err := os.ReadFile(filepath.Join("..", "web", "template", "append.html"))
+	if err != nil {
+		logrus.Fatal(err)
+	}
+
+	full_html_page_contents := slices.Concat(prepend_contents, html_bytes, append_contents)
+
+	// HTML may be malformed due to header, main and footer not matching exactly. Format it.
+	return gohtml.FormatBytes(full_html_page_contents)
 }
 
-func generateHTML(path string, d fs.DirEntry, err error) error {
+func generateWebStructure(path string, d fs.DirEntry, err error) error {
 	if err != nil {
 		return err
 	}
@@ -82,18 +103,29 @@ func generateHTML(path string, d fs.DirEntry, err error) error {
 }
 
 func main() {
+	// For local development: removes any pre-existing html files
+	os.RemoveAll(filepath.Join("..", "web", "app"))
+
 	// For each .md file, generate a .html file for it
-	err := filepath.WalkDir("../docs/Prod", generateHTML)
+	err := filepath.WalkDir(filepath.Join("..", "docs", "Prod"), generateWebStructure)
 	if err != nil {
 		logrus.Error(err)
 	}
 
-	// Create handler to display each .html file
-	http.Handle("/", http.FileServer(http.Dir("/web")))
+	router := mux.NewRouter()
+
+	// Create handler to serve all public files (css, js, etc.)
+	router.PathPrefix("/public/").Handler(http.StripPrefix("/public/", http.FileServer(http.Dir(filepath.Join("..", "public")))))
+	// Create handler to serve all assets (images, logos, etc.)
+	router.PathPrefix("/assets/").Handler(http.StripPrefix("/assets/", http.FileServer(http.Dir(filepath.Join("..", "assets")))))
+	// Create handler to serve all .html files (must be last to allow routes to access above directories)
+	router.PathPrefix("/").Handler(http.FileServer(http.Dir(filepath.Join("..", "web", "app", "/"))))
 
 	// Serve content!
-	err = http.ListenAndServe(":5500", nil)
-	if err != nil {
-		logrus.Error(err)
+	srv := &http.Server{
+		Handler:     router,
+		Addr:        "127.0.0.1:5500",
+		ReadTimeout: 15 * time.Second,
 	}
+	logrus.Fatal(srv.ListenAndServe())
 }
