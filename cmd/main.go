@@ -18,7 +18,7 @@ import (
 )
 
 const (
-	// Reletive paths
+	// Reletive Paths
 
 	md_dir_rel_path            = "../docs/Prod"    // Reletive path to directory that contains .md files that will be converted to .html files
 	gen_html_dir_rel_path      = "../web/app"      // Reletive path to directory that contains generated .html files
@@ -26,16 +26,29 @@ const (
 	public_dir_rel_path        = "../public/"      // Relative path to directory that contains public files (css, js, etc.)
 	assets_dir_rel_path        = "../assets/"      // Relative path to directory that contains assets files (images, icons, etc.)
 
+	// Port
+
+	port = "5500" // Port the website will be served at
+
 	// Routes
 
 	public_route = "/public/" // Route to directory that contains public files (css, js, etc.)
 	assets_route = "/assets/" // Route to directory that contains assets files (images, icons, etc.)
 
-	// Extensions
+	// File Extensions
 
 	docs_file_ext = ".md"   // File extension of doc files
 	web_file_ext  = ".html" // File extension of web files
 )
+
+// Retrieves an environment variable value. If it doesn't exist, use fallback value
+func getEnv(env_name, fallback_value string) string {
+	env_value, exists := os.LookupEnv(env_name)
+	if !exists {
+		env_value = fallback_value
+	}
+	return env_value
+}
 
 // Gets path to markdown file, returns converted path to html file
 func convertMarkdownPathToHTMLPath(markdown_path string) string {
@@ -138,10 +151,12 @@ func main() {
 	// Create handler to serve all .html files (must be last to allow routes to access above directories)
 	router.PathPrefix("/").Handler(http.FileServer(http.Dir(filepath.FromSlash(gen_html_dir_rel_path))))
 
+	port := getEnv("PORT", port)
+
 	// Serve content!
 	srv := &http.Server{
 		Handler:     router,
-		Addr:        "127.0.0.1:5500",
+		Addr:        ":" + port,
 		ReadTimeout: 15 * time.Second,
 	}
 	logrus.Fatal(srv.ListenAndServe())
