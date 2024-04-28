@@ -152,8 +152,23 @@ func main() {
 	router.PathPrefix(public_route).Handler(http.StripPrefix(public_route, http.FileServer(http.Dir(filepath.FromSlash(public_dir_rel_path)))))
 	// Create handler to serve all assets (images, logos, etc.)
 	router.PathPrefix(assets_route).Handler(http.StripPrefix(assets_route, http.FileServer(http.Dir(filepath.FromSlash(assets_dir_rel_path)))))
-	// Create handler to serve all .html files (must be last to allow routes to access above directories)
-	router.PathPrefix("/").Handler(http.FileServer(http.Dir(filepath.FromSlash(gen_html_dir_rel_path))))
+
+	// Serve all html files in route without the user needing to specify file extension in the route
+	html_handler := http.HandlerFunc(
+		func(w http.ResponseWriter, r *http.Request) {
+			file_path := filepath.Join(filepath.FromSlash(gen_html_dir_rel_path), r.URL.Path) + web_file_ext
+
+			if _, err := os.Stat(file_path); err == nil {
+				http.ServeFile(w, r, file_path)
+				return
+			}
+
+			// Handle case where no file is found
+			http.NotFound(w, r)
+		})
+
+	// Serve all html files in routes under "/"
+	router.PathPrefix("/").Handler(html_handler)
 
 	port := getEnv("PORT", port)
 
