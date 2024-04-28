@@ -52,7 +52,11 @@ func getEnv(env_name, fallback_value string) string {
 
 // Gets path to markdown file, returns converted path to html file
 func convertMarkdownPathToHTMLPath(markdown_path string) string {
+	// Change start of path to dir that stores html
 	html_path := strings.Replace(markdown_path, filepath.FromSlash(md_dir_rel_path), filepath.FromSlash(gen_html_dir_rel_path), 1)
+	// Replaces spaces with dashes for better url look
+	html_path = strings.ReplaceAll(html_path, " ", "-")
+	// Change extension to html
 	return strings.TrimSuffix(html_path, filepath.Ext(html_path)) + web_file_ext
 }
 
