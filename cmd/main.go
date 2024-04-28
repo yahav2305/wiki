@@ -2,43 +2,103 @@ package main
 
 import (
 	"io/fs"
+	"net/http"
 	"os"
 	"path/filepath"
+	"slices"
 	"strings"
+	"time"
 
 	"github.com/gomarkdown/markdown"
 	"github.com/gomarkdown/markdown/html"
 	"github.com/gomarkdown/markdown/parser"
+	"github.com/gorilla/mux"
+	"github.com/sirupsen/logrus"
+	"github.com/yosssi/gohtml"
 )
 
-func generateHTML(path string, d fs.DirEntry, err error) error {
+const (
+	// Reletive paths
+
+	md_dir_rel_path            = "../docs/Prod"    // Reletive path to directory that contains .md files that will be converted to .html files
+	gen_html_dir_rel_path      = "../web/app"      // Reletive path to directory that contains generated .html files
+	template_html_dir_rel_path = "../web/template" // Reletive path to directory that contains .html file templates
+	public_dir_rel_path        = "../public/"      // Relative path to directory that contains public files (css, js, etc.)
+	assets_dir_rel_path        = "../assets/"      // Relative path to directory that contains assets files (images, icons, etc.)
+
+	// Routes
+
+	public_route = "/public/" // Route to directory that contains public files (css, js, etc.)
+	assets_route = "/assets/" // Route to directory that contains assets files (images, icons, etc.)
+
+	// Extensions
+
+	docs_file_ext = ".md"   // File extension of doc files
+	web_file_ext  = ".html" // File extension of web files
+)
+
+// Gets path to markdown file, returns converted path to html file
+func convertMarkdownPathToHTMLPath(markdown_path string) string {
+	html_path := strings.Replace(markdown_path, filepath.FromSlash(md_dir_rel_path), filepath.FromSlash(gen_html_dir_rel_path), 1)
+	return strings.TrimSuffix(html_path, filepath.Ext(html_path)) + web_file_ext
+}
+
+// Gets bytes of markdown file, returns bytes of converted html
+func convertMarkdownToHTML(md_contents []byte) []byte {
+	// create markdown parser with extensions
+	extensions := parser.CommonExtensions | parser.AutoHeadingIDs | parser.NoEmptyLineBeforeBlock
+	parser := parser.NewWithExtensions(extensions)
+	doc := parser.Parse(md_contents)
+
+	// create HTML renderer with extensions
+	htmlFlags := html.CommonFlags | html.HrefTargetBlank
+	opts := html.RendererOptions{Flags: htmlFlags}
+	renderer := html.NewRenderer(opts)
+
+	// Convert markdown to HTML
+	html_bytes := markdown.Render(doc, renderer)
+
+	// Read prepend html file
+	prepend_contents, err := os.ReadFile(filepath.Join(filepath.FromSlash(template_html_dir_rel_path), "prepend.html"))
+	if err != nil {
+		logrus.Error(err)
+	}
+
+	// Read append html file
+	append_contents, err := os.ReadFile(filepath.Join(filepath.FromSlash(template_html_dir_rel_path), "append.html"))
+	if err != nil {
+		logrus.Error(err)
+	}
+
+	full_html_page_contents := slices.Concat(prepend_contents, html_bytes, append_contents)
+
+	// HTML may be malformed due to header, main and footer not matching exactly. Format it.
+	return gohtml.FormatBytes(full_html_page_contents)
+}
+
+func generateWebStructure(path string, d fs.DirEntry, err error) error {
 	if err != nil {
 		return err
 	}
 
-	if !d.IsDir() && filepath.Ext(path) == ".md" {
-
+	if !d.IsDir() && filepath.Ext(path) == docs_file_ext {
 		// Read markdown file
 		md_contents, err := os.ReadFile(path)
 		if err != nil {
 			return err
 		}
 
-		// create markdown parser with extensions
-		extensions := parser.CommonExtensions | parser.AutoHeadingIDs | parser.NoEmptyLineBeforeBlock
-		parser := parser.NewWithExtensions(extensions)
-		doc := parser.Parse(md_contents)
+		// Convert markdown to html
+		html_contents := convertMarkdownToHTML(md_contents)
 
-		// create HTML renderer with extensions
-		htmlFlags := html.CommonFlags | html.HrefTargetBlank
-		opts := html.RendererOptions{Flags: htmlFlags}
-		renderer := html.NewRenderer(opts)
+		// Convert markdown file path to html file path
+		html_path := convertMarkdownPathToHTMLPath(path)
 
-		// Convert markdown to HTML
-		html_contents := markdown.Render(doc, renderer)
-
-		// Create new file path for HTML file
-		html_path := strings.TrimSuffix(path, filepath.Ext(path)) + ".html"
+		// Ensure necessary directories exist
+		err = os.MkdirAll(filepath.Dir(html_path), 0700)
+		if err != nil {
+			return err
+		}
 
 		// Write HTML to file
 		file, err := os.OpenFile(html_path, os.O_CREATE|os.O_WRONLY, 0600)
@@ -53,16 +113,36 @@ func generateHTML(path string, d fs.DirEntry, err error) error {
 		if err != nil {
 			return err
 		}
+
 	}
 
 	return nil
 }
 
 func main() {
-	// For each .md file, generate a .html file for it
-	filepath.WalkDir("../documentations and explanations/Prod", generateHTML)
+	// For local development: removes any pre-existing html files
+	os.RemoveAll(filepath.FromSlash(gen_html_dir_rel_path))
 
-	// Create handler to display each .html file
+	// For each .md file, generate a .html file for it
+	err := filepath.WalkDir(filepath.FromSlash(md_dir_rel_path), generateWebStructure)
+	if err != nil {
+		logrus.Error(err)
+	}
+
+	router := mux.NewRouter()
+
+	// Create handler to serve all public files (css, js, etc.)
+	router.PathPrefix(public_route).Handler(http.StripPrefix(public_route, http.FileServer(http.Dir(filepath.FromSlash(public_dir_rel_path)))))
+	// Create handler to serve all assets (images, logos, etc.)
+	router.PathPrefix(assets_route).Handler(http.StripPrefix(assets_route, http.FileServer(http.Dir(filepath.FromSlash(assets_dir_rel_path)))))
+	// Create handler to serve all .html files (must be last to allow routes to access above directories)
+	router.PathPrefix("/").Handler(http.FileServer(http.Dir(filepath.FromSlash(gen_html_dir_rel_path))))
 
 	// Serve content!
+	srv := &http.Server{
+		Handler:     router,
+		Addr:        "127.0.0.1:5500",
+		ReadTimeout: 15 * time.Second,
+	}
+	logrus.Fatal(srv.ListenAndServe())
 }
