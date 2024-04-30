@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"regexp"
 	"slices"
 	"strings"
 	"time"
@@ -61,7 +62,7 @@ func convertMarkdownPathToHTMLPath(markdown_path string) string {
 }
 
 // Gets bytes of markdown file, returns bytes of converted html
-func convertMarkdownToHTML(md_contents []byte) []byte {
+func convertMarkdownToHTML(md_contents []byte, dir_file bool) []byte {
 	// create markdown parser with extensions
 	extensions := parser.CommonExtensions | parser.AutoHeadingIDs | parser.NoEmptyLineBeforeBlock
 	parser := parser.NewWithExtensions(extensions)
@@ -90,7 +91,21 @@ func convertMarkdownToHTML(md_contents []byte) []byte {
 	full_html_page_contents := slices.Concat(prepend_contents, html_bytes, append_contents)
 
 	// HTML may be malformed due to header, main and footer not matching exactly. Format it.
-	return gohtml.FormatBytes(full_html_page_contents)
+	full_html_page_contents = gohtml.FormatBytes(full_html_page_contents)
+
+	//TODO: implement using regex. Possible regex: `\[.*\].*\(.*(\.md)\)`
+	// Removes docs folder file path from all links, since we serve doc files from root route
+	replaced_html_string := strings.ReplaceAll(string(full_html_page_contents), strings.Replace(md_dir_rel_path, "..", "", 1), "")
+	//TODO: implement using regex
+	// Removes all md file extension for navigating between files
+	replaced_html_string = strings.ReplaceAll(replaced_html_string, docs_file_ext, "")
+	//TODO: implement using regex
+	// If file serves as a file that is a directory for a subject, replace all spaces with dashes for url compatability
+	if dir_file {
+		replaced_html_string = strings.ReplaceAll(replaced_html_string, "%20", "-")
+	}
+
+	return []byte(replaced_html_string)
 }
 
 func generateWebStructure(path string, d fs.DirEntry, err error) error {
@@ -105,8 +120,8 @@ func generateWebStructure(path string, d fs.DirEntry, err error) error {
 			return err
 		}
 
-		// Convert markdown to html
-		html_contents := convertMarkdownToHTML(md_contents)
+		// Convert markdown to html, specifying if is dir file (a file that is a directory for a subject, must not start with a number)
+		html_contents := convertMarkdownToHTML(md_contents, !regexp.MustCompile(`^\d`).MatchString(path))
 
 		// Convert markdown file path to html file path
 		html_path := convertMarkdownPathToHTMLPath(path)
