@@ -95,7 +95,7 @@ func convertMarkdownToHTML(md_contents []byte, dir_file bool) []byte {
 
 	//TODO: implement using regex. Possible regex: `\[.*\].*\(.*(\.md)\)`
 	// Removes docs folder file path from all links, since we serve doc files from root route
-	replaced_html_string := strings.ReplaceAll(string(full_html_page_contents), strings.Replace(md_dir_rel_path, "..", "", 1), "")
+	replaced_html_string := strings.ReplaceAll(string(full_html_page_contents), "docs/Prod", "")
 	//TODO: implement using regex
 	// Removes all md file extension for navigating between files
 	replaced_html_string = strings.ReplaceAll(replaced_html_string, docs_file_ext, "")
@@ -119,6 +119,8 @@ func generateWebStructure(path string, d fs.DirEntry, err error) error {
 		if err != nil {
 			return err
 		}
+
+		md_contents = prepareMarkDown(md_contents)
 
 		// Convert markdown to html, specifying if is dir file (a file that is a directory for a subject, must not start with a number)
 		html_contents := convertMarkdownToHTML(md_contents, !regexp.MustCompile(`^\d`).MatchString(path))
