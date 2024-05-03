@@ -67,12 +67,11 @@ func prepareMarkDown(md_contents []byte, dir_file bool) []byte {
 	md_string := string(md_contents)
 
 	// Removes docs folder file path from all links, since we serve doc files from root route
-	md_string = strings.ReplaceAll(md_string, "docs/Prod", "")
-	//TODO: implement using regex
+	md_string = strings.ReplaceAll(md_string, strings.Replace(md_dir_rel_path, "../", "", 1), "")
+
 	// Removes all md file extension for navigating between files
 	md_string = strings.ReplaceAll(md_string, docs_file_ext, "")
-	md_string = regexp.
-	//TODO: implement using regex
+
 	// If file serves as a file that is a directory for a subject, replace all spaces with dashes for url compatability
 	if dir_file {
 		md_string = strings.ReplaceAll(md_string, "%20", "-")
