@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"regexp"
 	"slices"
 	"strings"
 	"time"
@@ -60,6 +61,25 @@ func convertMarkdownPathToHTMLPath(markdown_path string) string {
 	return strings.TrimSuffix(html_path, filepath.Ext(html_path)) + web_file_ext
 }
 
+// Changes markdown file to adapt to the wiki's needs
+func prepareMarkDown(md_contents []byte, dir_file bool) []byte {
+
+	md_string := string(md_contents)
+
+	// Removes docs folder file path from all links, since we serve doc files from root route
+	md_string = strings.ReplaceAll(md_string, strings.Replace(md_dir_rel_path, "../", "", 1), "")
+
+	// Removes all md file extension for navigating between files
+	md_string = strings.ReplaceAll(md_string, docs_file_ext, "")
+
+	// If file serves as a file that is a directory for a subject, replace all spaces with dashes for url compatability
+	if dir_file {
+		md_string = strings.ReplaceAll(md_string, "%20", "-")
+	}
+
+	return []byte(md_string)
+}
+
 // Gets bytes of markdown file, returns bytes of converted html
 func convertMarkdownToHTML(md_contents []byte) []byte {
 	// create markdown parser with extensions
@@ -105,7 +125,9 @@ func generateWebStructure(path string, d fs.DirEntry, err error) error {
 			return err
 		}
 
-		// Convert markdown to html
+		md_contents = prepareMarkDown(md_contents, !regexp.MustCompile(`^\d`).MatchString(path))
+
+		// Convert markdown to html, specifying if is dir file (a file that is a directory for a subject, must not start with a number)
 		html_contents := convertMarkdownToHTML(md_contents)
 
 		// Convert markdown file path to html file path
