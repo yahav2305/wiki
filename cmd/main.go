@@ -125,6 +125,7 @@ func generateWebStructure(path string, d fs.DirEntry, err error) error {
 			return err
 		}
 
+		// If md file doesn't start with number, must be dir file
 		md_contents = prepareMarkDown(md_contents, !regexp.MustCompile(`^\d`).MatchString(path))
 
 		// Convert markdown to html, specifying if is dir file (a file that is a directory for a subject, must not start with a number)
