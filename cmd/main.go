@@ -142,7 +142,7 @@ func generateWebStructure(path string, d fs.DirEntry, err error) error {
 		defer file_r.Close()
 
 		page_structure := PageData{
-			Title:    filepath.Base(html_path),
+			Title:    strings.TrimSuffix(filepath.Base(html_path), filepath.Ext(html_path)),
 			Contents: string(html_contents),
 		}
 
