@@ -190,7 +190,7 @@ func main() {
 
 			// Special case: serve index.html in route /
 			if r.URL.Path == "/" {
-				file_path := filepath.Join(filepath.Join(filepath.FromSlash(gen_html_dir_rel_path), "index")) + web_file_ext
+				file_path := filepath.Join(filepath.Join(filepath.FromSlash(gen_html_dir_rel_path), "home")) + web_file_ext
 				if _, err := os.Stat(file_path); err == nil {
 					http.ServeFile(w, r, file_path)
 					return
