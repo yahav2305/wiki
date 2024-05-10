@@ -1,12 +1,12 @@
 package main
 
 import (
+	"html/template"
 	"io/fs"
 	"net/http"
 	"os"
 	"path/filepath"
 	"regexp"
-	"slices"
 	"strings"
 	"time"
 
@@ -41,6 +41,11 @@ const (
 	docs_file_ext = ".md"   // File extension of doc files
 	web_file_ext  = ".html" // File extension of web files
 )
+
+type PageData struct {
+	Title    string
+	Contents string
+}
 
 // Retrieves an environment variable value. If it doesn't exist, use fallback value
 func getEnv(env_name, fallback_value string) string {
@@ -94,23 +99,24 @@ func convertMarkdownToHTML(md_contents []byte) []byte {
 
 	// Convert markdown to HTML
 	html_bytes := markdown.Render(doc, renderer)
+	/*
+		// Read prepend html file
+		prepend_contents, err := os.ReadFile(filepath.Join(filepath.FromSlash(template_html_dir_rel_path), "prepend.html"))
+		if err != nil {
+			logrus.Error(err)
+		}
 
-	// Read prepend html file
-	prepend_contents, err := os.ReadFile(filepath.Join(filepath.FromSlash(template_html_dir_rel_path), "prepend.html"))
-	if err != nil {
-		logrus.Error(err)
-	}
+		// Read append html file
+		append_contents, err := os.ReadFile(filepath.Join(filepath.FromSlash(template_html_dir_rel_path), "append.html"))
+		if err != nil {
+			logrus.Error(err)
+		}
 
-	// Read append html file
-	append_contents, err := os.ReadFile(filepath.Join(filepath.FromSlash(template_html_dir_rel_path), "append.html"))
-	if err != nil {
-		logrus.Error(err)
-	}
-
-	full_html_page_contents := slices.Concat(prepend_contents, html_bytes, append_contents)
+		full_html_page_contents := slices.Concat(prepend_contents, html_bytes, append_contents)
+	*/
 
 	// HTML may be malformed due to header, main and footer not matching exactly. Format it.
-	return gohtml.FormatBytes(full_html_page_contents)
+	return html_bytes
 }
 
 func generateWebStructure(path string, d fs.DirEntry, err error) error {
@@ -148,6 +154,21 @@ func generateWebStructure(path string, d fs.DirEntry, err error) error {
 
 		// Delays the closing of the file until the end of the program
 		defer file.Close()
+
+		page_structure := PageData{
+			Title:    filepath.Base(html_path),
+			Contents: string(gohtml.FormatBytes(html_contents)),
+		}
+
+		tmpl, err := template.ParseFiles("../web/template/base.tmpl")
+		if err != nil {
+			logrus.Error(err)
+		}
+
+		err = tmpl.ExecuteTemplate(file, "base", page_structure)
+		if err != nil {
+			logrus.Error(err)
+		}
 
 		_, err = file.Write(html_contents)
 		if err != nil {
