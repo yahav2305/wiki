@@ -101,7 +101,6 @@ func convertMarkdownToHTML(md_contents []byte) []byte {
 	// Convert markdown to HTML
 	html_bytes := markdown.Render(doc, renderer)
 
-	// HTML may be malformed due to header, main and footer not matching exactly. Format it.
 	return html_bytes
 }
 
@@ -132,7 +131,7 @@ func generateWebStructure(path string, d fs.DirEntry, err error) error {
 			return err
 		}
 
-		// Opens HTML file_r to write to
+		// Opens HTML file to write only
 		file_r, err := os.OpenFile(html_path, os.O_CREATE|os.O_WRONLY, 0600)
 		if err != nil {
 			return err
@@ -148,7 +147,7 @@ func generateWebStructure(path string, d fs.DirEntry, err error) error {
 
 		tmpl, err := template.ParseFiles(filepath.FromSlash(base_template_file))
 		if err != nil {
-			logrus.Error(err)
+			return err
 		}
 
 		template_output := &strings.Builder{}
@@ -156,7 +155,7 @@ func generateWebStructure(path string, d fs.DirEntry, err error) error {
 		// Write completed template
 		err = tmpl.ExecuteTemplate(template_output, "base", page_structure)
 		if err != nil {
-			logrus.Error(err)
+			return err
 		}
 
 		// Clean up html file and write to file
