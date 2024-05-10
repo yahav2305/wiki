@@ -1,13 +1,13 @@
 package main
 
 import (
-	"html/template"
 	"io/fs"
 	"net/http"
 	"os"
 	"path/filepath"
 	"regexp"
 	"strings"
+	"text/template"
 	"time"
 
 	"github.com/gomarkdown/markdown"
@@ -21,11 +21,12 @@ import (
 const (
 	// Reletive Paths
 
-	md_dir_rel_path            = "../docs/Prod"    // Reletive path to directory that contains .md files that will be converted to .html files
-	gen_html_dir_rel_path      = "../web/app"      // Reletive path to directory that contains generated .html files
-	template_html_dir_rel_path = "../web/template" // Reletive path to directory that contains .html file templates
-	public_dir_rel_path        = "../public/"      // Relative path to directory that contains public files (css, js, etc.)
-	assets_dir_rel_path        = "../assets/"      // Relative path to directory that contains assets files (images, icons, etc.)
+	md_dir_rel_path            = "../docs/Prod"                   // Reletive path to directory that contains .md files that will be converted to .html files
+	gen_html_dir_rel_path      = "../web/app"                     // Reletive path to directory that contains generated .html files
+	template_html_dir_rel_path = "../web/template"                // Reletive path to directory that contains .html file templates
+	public_dir_rel_path        = "../public/"                     // Relative path to directory that contains public files (css, js, etc.)
+	assets_dir_rel_path        = "../assets/"                     // Relative path to directory that contains assets files (images, icons, etc.)
+	base_template_file         = "../web/template/base.tmpl.html" // Relative path to template file for all html pages
 
 	// Port
 
@@ -99,21 +100,6 @@ func convertMarkdownToHTML(md_contents []byte) []byte {
 
 	// Convert markdown to HTML
 	html_bytes := markdown.Render(doc, renderer)
-	/*
-		// Read prepend html file
-		prepend_contents, err := os.ReadFile(filepath.Join(filepath.FromSlash(template_html_dir_rel_path), "prepend.html"))
-		if err != nil {
-			logrus.Error(err)
-		}
-
-		// Read append html file
-		append_contents, err := os.ReadFile(filepath.Join(filepath.FromSlash(template_html_dir_rel_path), "append.html"))
-		if err != nil {
-			logrus.Error(err)
-		}
-
-		full_html_page_contents := slices.Concat(prepend_contents, html_bytes, append_contents)
-	*/
 
 	// HTML may be malformed due to header, main and footer not matching exactly. Format it.
 	return html_bytes
@@ -146,35 +132,36 @@ func generateWebStructure(path string, d fs.DirEntry, err error) error {
 			return err
 		}
 
-		// Write HTML to file
-		file, err := os.OpenFile(html_path, os.O_CREATE|os.O_WRONLY, 0600)
+		// Opens HTML file_r to write to
+		file_r, err := os.OpenFile(html_path, os.O_CREATE|os.O_WRONLY, 0600)
 		if err != nil {
 			return err
 		}
 
 		// Delays the closing of the file until the end of the program
-		defer file.Close()
+		defer file_r.Close()
 
 		page_structure := PageData{
 			Title:    filepath.Base(html_path),
-			Contents: string(gohtml.FormatBytes(html_contents)),
+			Contents: string(html_contents),
 		}
 
-		tmpl, err := template.ParseFiles("../web/template/base.tmpl")
+		tmpl, err := template.ParseFiles(filepath.FromSlash(base_template_file))
 		if err != nil {
 			logrus.Error(err)
 		}
 
-		err = tmpl.ExecuteTemplate(file, "base", page_structure)
+		template_output := &strings.Builder{}
+
+		// Write completed template
+		err = tmpl.ExecuteTemplate(template_output, "base", page_structure)
 		if err != nil {
 			logrus.Error(err)
 		}
 
-		_, err = file.Write(html_contents)
-		if err != nil {
-			return err
-		}
-
+		// Clean up html file and write to file
+		file_r.Write(gohtml.FormatBytes([]byte(template_output.String())))
+		file_r.Close()
 	}
 
 	return nil
