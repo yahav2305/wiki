@@ -211,11 +211,14 @@ func main() {
 
 	port := getEnv("PORT", port)
 
+	logrus.Printf("Started web server on localhost:%v", port)
+
 	// Serve content!
 	srv := &http.Server{
 		Handler:     router,
 		Addr:        ":" + port,
 		ReadTimeout: 15 * time.Second,
 	}
+
 	logrus.Fatal(srv.ListenAndServe())
 }
