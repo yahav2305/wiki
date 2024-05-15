@@ -6,8 +6,8 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
-	"slices"
 	"strings"
+	"text/template"
 	"time"
 
 	"github.com/gomarkdown/markdown"
@@ -21,11 +21,12 @@ import (
 const (
 	// Reletive Paths
 
-	md_dir_rel_path            = "../docs/Prod"    // Reletive path to directory that contains .md files that will be converted to .html files
-	gen_html_dir_rel_path      = "../web/app"      // Reletive path to directory that contains generated .html files
-	template_html_dir_rel_path = "../web/template" // Reletive path to directory that contains .html file templates
-	public_dir_rel_path        = "../public/"      // Relative path to directory that contains public files (css, js, etc.)
-	assets_dir_rel_path        = "../assets/"      // Relative path to directory that contains assets files (images, icons, etc.)
+	md_dir_rel_path            = "../docs/Prod"                   // Reletive path to directory that contains .md files that will be converted to .html files
+	gen_html_dir_rel_path      = "../web/app"                     // Reletive path to directory that contains generated .html files
+	template_html_dir_rel_path = "../web/template"                // Reletive path to directory that contains .html file templates
+	public_dir_rel_path        = "../public/"                     // Relative path to directory that contains public files (css, js, etc.)
+	assets_dir_rel_path        = "../assets/"                     // Relative path to directory that contains assets files (images, icons, etc.)
+	base_template_file         = "../web/template/base.tmpl.html" // Relative path to template file for all html pages
 
 	// Port
 
@@ -41,6 +42,11 @@ const (
 	docs_file_ext = ".md"   // File extension of doc files
 	web_file_ext  = ".html" // File extension of web files
 )
+
+type PageData struct {
+	Title    string
+	Contents string
+}
 
 // Retrieves an environment variable value. If it doesn't exist, use fallback value
 func getEnv(env_name, fallback_value string) string {
@@ -95,22 +101,7 @@ func convertMarkdownToHTML(md_contents []byte) []byte {
 	// Convert markdown to HTML
 	html_bytes := markdown.Render(doc, renderer)
 
-	// Read prepend html file
-	prepend_contents, err := os.ReadFile(filepath.Join(filepath.FromSlash(template_html_dir_rel_path), "prepend.html"))
-	if err != nil {
-		logrus.Error(err)
-	}
-
-	// Read append html file
-	append_contents, err := os.ReadFile(filepath.Join(filepath.FromSlash(template_html_dir_rel_path), "append.html"))
-	if err != nil {
-		logrus.Error(err)
-	}
-
-	full_html_page_contents := slices.Concat(prepend_contents, html_bytes, append_contents)
-
-	// HTML may be malformed due to header, main and footer not matching exactly. Format it.
-	return gohtml.FormatBytes(full_html_page_contents)
+	return html_bytes
 }
 
 func generateWebStructure(path string, d fs.DirEntry, err error) error {
@@ -125,6 +116,7 @@ func generateWebStructure(path string, d fs.DirEntry, err error) error {
 			return err
 		}
 
+		// If md file doesn't start with number, must be dir file
 		md_contents = prepareMarkDown(md_contents, !regexp.MustCompile(`^\d`).MatchString(path))
 
 		// Convert markdown to html, specifying if is dir file (a file that is a directory for a subject, must not start with a number)
@@ -139,20 +131,36 @@ func generateWebStructure(path string, d fs.DirEntry, err error) error {
 			return err
 		}
 
-		// Write HTML to file
-		file, err := os.OpenFile(html_path, os.O_CREATE|os.O_WRONLY, 0600)
+		// Opens HTML file to write only
+		file_r, err := os.OpenFile(html_path, os.O_CREATE|os.O_WRONLY, 0600)
 		if err != nil {
 			return err
 		}
 
 		// Delays the closing of the file until the end of the program
-		defer file.Close()
+		defer file_r.Close()
 
-		_, err = file.Write(html_contents)
+		page_structure := PageData{
+			Title:    strings.TrimSuffix(filepath.Base(html_path), filepath.Ext(html_path)),
+			Contents: string(html_contents),
+		}
+
+		tmpl, err := template.ParseFiles(filepath.FromSlash(base_template_file))
 		if err != nil {
 			return err
 		}
 
+		template_output := &strings.Builder{}
+
+		// Write completed template
+		err = tmpl.ExecuteTemplate(template_output, "base", page_structure)
+		if err != nil {
+			return err
+		}
+
+		// Clean up html file and write to file
+		file_r.Write(gohtml.FormatBytes([]byte(template_output.String())))
+		file_r.Close()
 	}
 
 	return nil
@@ -182,7 +190,7 @@ func main() {
 
 			// Special case: serve index.html in route /
 			if r.URL.Path == "/" {
-				file_path := filepath.Join(filepath.Join(filepath.FromSlash(gen_html_dir_rel_path), "index")) + web_file_ext
+				file_path := filepath.Join(filepath.Join(filepath.FromSlash(gen_html_dir_rel_path), "home")) + web_file_ext
 				if _, err := os.Stat(file_path); err == nil {
 					http.ServeFile(w, r, file_path)
 					return
@@ -203,11 +211,14 @@ func main() {
 
 	port := getEnv("PORT", port)
 
+	logrus.Printf("Started web server on localhost:%v", port)
+
 	// Serve content!
 	srv := &http.Server{
 		Handler:     router,
 		Addr:        ":" + port,
 		ReadTimeout: 15 * time.Second,
 	}
+
 	logrus.Fatal(srv.ListenAndServe())
 }
