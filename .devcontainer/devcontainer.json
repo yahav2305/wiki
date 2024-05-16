@@ -8,7 +8,8 @@
 	// Features to add to the dev container. More info: https://containers.dev/features.
 	"features": {
 		"ghcr.io/devcontainers/features/hugo:1": {
-			"extended": true
+			"extended": true,
+			"version": "0.126.1"
 		}
 	},
 
