@@ -1,3 +1,7 @@
+---
+title: 'index'
+draft: true
+---
 # Contact
 
 This contact page provides several ways to connect with me, Yahav Deutsch. Whether you have a job opportunity, questions about this website, or just want to chat, feel free to reach out!

@@ -1,3 +1,7 @@
+---
+title: 'index'
+draft: true
+---
 1. [What is Kubernetes](1%20What%20is%20Kubernetes.md)
 2. [Kubernetes Architecture](2%20Kubernetes%20Architecture.md)
 3. [Kubectl](3%20Kubectl.md)

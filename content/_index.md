@@ -1,3 +1,7 @@
+---
+title: 'index'
+draft: true
+---
 # Yahav Deutsch's wiki
 This website represents the sum of my knowledge.
 It is built with Go, and will be deployed on the cloud on Kubernetes.
