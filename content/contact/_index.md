@@ -1,6 +1,6 @@
 ---
 title: 'index'
-draft: true
+draft: false
 ---
 # Contact
 

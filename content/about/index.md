@@ -1,6 +1,6 @@
 ---
 title: 'index'
-draft: true
+draft: false
 ---
 # About
 I'm Yahav Deutsch, a DevOps Engineer driven by the thrill of streamlining processes and optimizing workflows. Frustrated by inefficiencies, I find immense satisfaction in automating tasks and building robust infrastructure. This website serves as a dual platform:

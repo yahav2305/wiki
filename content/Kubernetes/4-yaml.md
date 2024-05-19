@@ -1,3 +1,7 @@
+---
+title: 'What is Kubernetes'
+draft: false
+---
 # Table of Contents
 
 - [YAML](#yaml)
@@ -19,10 +23,10 @@ metadata:
 name: nginx
 spec:
 containers:
-  -name: nginx
-image: nginx:1.14.2
-ports:
-    -containerPort: 80
+  - name: nginx
+    image: nginx:1.14.2
+    ports:
+    - containerPort: 80
 ```
 
 | `kubectl create -f file.yaml` | Create object according to given yaml file |
