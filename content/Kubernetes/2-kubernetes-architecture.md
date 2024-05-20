@@ -1,5 +1,5 @@
 ---
-title: 'What is Kubernetes'
+title: 'Kubernetes Architecture'
 draft: false
 ---
 # Table of Contents

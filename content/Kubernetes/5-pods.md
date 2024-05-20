@@ -1,5 +1,5 @@
 ---
-title: 'What is Kubernetes'
+title: 'Pods'
 draft: false
 ---
 # Table of Contents

@@ -1,5 +1,5 @@
 ---
-title: 'What is Kubernetes'
+title: 'Kubectl'
 draft: false
 ---
 # Table of Contents

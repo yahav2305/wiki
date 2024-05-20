@@ -1,5 +1,5 @@
 ---
-title: 'What is Kubernetes'
+title: 'ReplicaSets'
 draft: false
 ---
 # Table of Contents
