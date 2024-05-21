@@ -17,6 +17,6 @@ title = "Yahav Deutsch"
 # image = "assets/logo-no-background.svg"
   headline = "Devops with a passion for automation and efficiency"
 links = [
-    { email = "mailto:hello@your_domain.com" },
     { github = "https://github.com/username" },
+    { email = "mailto:hello@your_domain.com" },
   ]
