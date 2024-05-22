@@ -18,5 +18,6 @@ title = "Yahav Deutsch"
   headline = "Devops with a passion for automation and efficiency"
 links = [
     { github = "https://github.com/username" },
+    { linkedin = "https://linkedin.com/in/username" },
     { email = "mailto:hello@your_domain.com" },
   ]
