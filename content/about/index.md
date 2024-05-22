@@ -1,8 +1,7 @@
 ---
-title: 'index'
+title: 'About'
 draft: false
 ---
-# About
 I'm Yahav Deutsch, a DevOps Engineer driven by the thrill of streamlining processes and optimizing workflows. Frustrated by inefficiencies, I find immense satisfaction in automating tasks and building robust infrastructure. This website serves as a dual platform:
 - **DevOps Playground:** This website itself is a product of my DevOps expertise. Building it allowed me to implement the tools and techniques I'm passionate about.
 - **Skills Showcase:** Explore this site to get a glimpse of my ability to automate tasks, provision infrastructure, and ensure seamless deployments.

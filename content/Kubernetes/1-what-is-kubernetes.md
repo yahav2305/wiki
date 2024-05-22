@@ -2,15 +2,7 @@
 title: 'What is Kubernetes'
 draft: false
 ---
-# Table of Contents
 
-- [What is Kubernetes](#what-is-kubernetes)
-	- [Key features](#key-features)
-	- [Benefits](#benefits)
-	- [What Kubernetes is not](#what-kubernetes-is-not)
-
-
-# What is Kubernetes
 Kubernetes (K8s) is an open-source platform designed to manage containerized applications. It automates deployment, scaling, and operations of containerized workloads, ensuring applications run efficiently and reliably.
 ## Key features
 - **Service discovery & load balancing:** Makes applications accessible and distributes traffic for stability.

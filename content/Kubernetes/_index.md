@@ -1,5 +1,5 @@
 ---
-title: 'index'
+title: 'Kubernetes'
 draft: false
 ---
 1. [What is Kubernetes](1-what-is-kubernetes)

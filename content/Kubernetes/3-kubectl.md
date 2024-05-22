@@ -2,20 +2,7 @@
 title: 'Kubectl'
 draft: false
 ---
-# Table of Contents
 
-- [Kubectl](#kubectl)
-	- [Basic Syntax](#basic-syntax)
-		- [Examples](#examples)
-		- [Specifying Multiple Resources](#specifying-multiple-resources)
-	- [Cluster Access Configuration](#cluster-access-configuration)
-	- [Output options](#output-options)
-		- [Formatting output](#formatting-output)
-			- [Example](#example)
-		- [Sorting list objects](#sorting-list-objects)
-			- [Example](#example)
-
-# Kubectl
 Kubectl is a command-line tool that allows you to interact with a Kubernetes cluster's control plane through the Kubernetes API.
 ## Basic Syntax
 ```shell

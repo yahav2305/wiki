@@ -2,17 +2,7 @@
 title: 'Services'
 draft: false
 ---
-# Table of Contents
 
-- [Services](#services)
-	- [NodePort](#nodeport)
-		- [Creation YAML](#creation-yaml)
-	- [ClusterIP](#clusterip)
-		- [Creation YAML](#creation-yaml)
-	- [LoadBalancer](#loadbalancer)
-		- [Creation YAML](#creation-yaml)
-
-# Services
 Services are essential components in Kubernetes that enable communication between pods and provide a mechanism to expose applications to external users. They act as an abstraction layer, decoupling pods from network details and facilitating service discovery within the cluster.
 
 Here's a breakdown of the three primary service types in Kubernetes:

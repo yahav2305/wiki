@@ -2,16 +2,8 @@
 title: 'Kubernetes Architecture'
 draft: false
 ---
-# Table of Contents
 
-- [Kubernetes Architecture](#kubernetes-architecture)
-	- [Control Plane Components](#control-plane-components)
-	- [Node Components](#node-components)
-	- [Addons](#addons)
-
-# Kubernetes Architecture
-
-- A Kubernetes cluster consists of worker machines (nodes) running containerized applications and a control plane managing them.
+A Kubernetes cluster consists of worker machines (nodes) running containerized applications and a control plane managing them.
 
 ## Control Plane Components
 

@@ -2,14 +2,6 @@
 title: 'Deployments'
 draft: false
 ---
-# Table of Contents
-
-- [Deployments](#deployments)
-	- [kubectl Commands for Deployments](#kubectl-commands-for-deployments)
-	- [Deployment Creation YAML](#deployment-creation-yaml)
-	- [Updating Deployments](#updating-deployments)
-
-# Deployments
 
 Deployments are Kubernetes objects that manage the lifecycle of pod updates for your applications. They provide a declarative way to specify the desired state of your deployment, including the number of replicas, container image, and configuration. Kubernetes then automatically plans and executes the rollout process, ensuring minimal disruption to your application's availability.
 

@@ -2,11 +2,7 @@
 title: 'Yaml'
 draft: false
 ---
-# Table of Contents
 
-- [YAML](#yaml)
-
-# YAML
 YAML is a human-readable data format used to define configurations in Kubernetes. It serves as the primary way to describe and deploy Kubernetes objects.
 
 YAML files will always have 4 fields:

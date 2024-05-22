@@ -2,13 +2,6 @@
 title: 'Pods'
 draft: false
 ---
-# Table of Contents
-
-- [Pods](#pods)
-	- [Pod Commands with Kubectl](#pod-commands-with-kubectl)
-	- [Pod Creation YAML](#pod-creation-yaml)
-
-# Pods
 
 Pods are the fundamental unit of deployment in Kubernetes. They encapsulate one or more containerized applications and the resources they need to run.
 

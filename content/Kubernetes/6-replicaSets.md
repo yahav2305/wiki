@@ -2,15 +2,6 @@
 title: 'ReplicaSets'
 draft: false
 ---
-# Table of Contents
-
-- [ReplicaSets](#replicasets)
-	- [kubectl Commands for ReplicaSets](#kubectl-commands-for-replicasets)
-	- [ReplicaSet Creation YAML](#replicaset-creation-yaml)
-	- [Label Matching](#label-matching)
-	- [Automatic Pod Scaling](#automatic-pod-scaling)
-
-# ReplicaSets
 
 ReplicaSets are Kubernetes objects that guarantee a specified number of identical pods are running in the cluster at any given time. They act as controllers, ensuring pod availability and automatically scaling the pod count up or down as needed.
 
