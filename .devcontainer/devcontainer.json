@@ -19,10 +19,7 @@
 	],
 	"customizations": {
 		"vscode": {
-			"extensions": [
-				"ritwickdey.LiveServer",
-				"eamodio.gitlens"
-			]
+			"extensions": []
 		}
 	}
 
