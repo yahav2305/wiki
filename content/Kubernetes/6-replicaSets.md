@@ -1,6 +1,9 @@
 ---
 title: 'ReplicaSets'
 draft: false
+weight: 6
+series: ["Kubernetes"]
+series_order: 6
 ---
 
 ReplicaSets are Kubernetes objects that guarantee a specified number of identical pods are running in the cluster at any given time. They act as controllers, ensuring pod availability and automatically scaling the pod count up or down as needed.

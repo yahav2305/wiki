@@ -1,6 +1,9 @@
 ---
 title: 'What is Kubernetes'
 draft: false
+weight: 1
+series: ["Kubernetes"]
+series_order: 1
 ---
 
 Kubernetes (K8s) is an open-source platform designed to manage containerized applications. It automates deployment, scaling, and operations of containerized workloads, ensuring applications run efficiently and reliably.

@@ -1,6 +1,9 @@
 ---
 title: 'Services'
 draft: false
+weight: 8
+series: ["Kubernetes"]
+series_order: 8
 ---
 
 Services are essential components in Kubernetes that enable communication between pods and provide a mechanism to expose applications to external users. They act as an abstraction layer, decoupling pods from network details and facilitating service discovery within the cluster.

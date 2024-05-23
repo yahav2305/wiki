@@ -1,6 +1,9 @@
 ---
 title: 'Kubectl'
 draft: false
+weight: 3
+series: ["Kubernetes"]
+series_order: 3
 ---
 
 Kubectl is a command-line tool that allows you to interact with a Kubernetes cluster's control plane through the Kubernetes API.

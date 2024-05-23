@@ -1,6 +1,9 @@
 ---
 title: 'Deployments'
 draft: false
+weight: 7
+series: ["Kubernetes"]
+series_order: 7
 ---
 
 Deployments are Kubernetes objects that manage the lifecycle of pod updates for your applications. They provide a declarative way to specify the desired state of your deployment, including the number of replicas, container image, and configuration. Kubernetes then automatically plans and executes the rollout process, ensuring minimal disruption to your application's availability.

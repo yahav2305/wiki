@@ -1,5 +1,5 @@
 ---
-title: 'index'
+title: 'Home'
 draft: false
 ---
 This website represents the sum of my knowledge.

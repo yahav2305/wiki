@@ -1,6 +1,9 @@
 ---
 title: 'Pods'
 draft: false
+weight: 5
+series: ["Kubernetes"]
+series_order: 5
 ---
 
 Pods are the fundamental unit of deployment in Kubernetes. They encapsulate one or more containerized applications and the resources they need to run.

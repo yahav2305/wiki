@@ -1,6 +1,9 @@
 ---
 title: 'Kubernetes Architecture'
 draft: false
+weight: 2
+series: ["Kubernetes"]
+series_order: 2
 ---
 
 A Kubernetes cluster consists of worker machines (nodes) running containerized applications and a control plane managing them.

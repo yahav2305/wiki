@@ -1,6 +1,9 @@
 ---
 title: 'Yaml'
 draft: false
+weight: 4
+series: ["Kubernetes"]
+series_order: 4
 ---
 
 YAML is a human-readable data format used to define configurations in Kubernetes. It serves as the primary way to describe and deploy Kubernetes objects.
