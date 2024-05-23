@@ -1,5 +1,5 @@
 .obsidian
-docs/Archive
-docs/Dev
-docs/Templates
-web/app
+public/
+Templates/
+dev/
+.hugo_build.lock

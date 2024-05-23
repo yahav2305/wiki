@@ -1,0 +1,23 @@
+languageCode = "en"
+languageName = "English"
+weight = 1
+title = "Yahav Deutsch"
+
+[params]
+  displayName = "EN"
+  isoCode = "en"
+  rtl = false
+  dateFormat = "2 January 2006"
+  logo = "assets/logo-no-background.svg"
+  description = "Website that acts as a resume and as a source of knowledge for Yahav Deutsch"
+  copyright = "TM © { year } - Yahav Deutsch - All rights reserved"
+
+[author]
+  name = "Yahav Deutsch"
+# image = "assets/logo-no-background.svg"
+  headline = "Devops with a passion for automation and efficiency"
+links = [
+    { github = "https://github.com/username" },
+    { linkedin = "https://linkedin.com/in/username" },
+    { email = "mailto:hello@your_domain.com" },
+  ]
