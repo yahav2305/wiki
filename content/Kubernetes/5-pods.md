@@ -15,7 +15,7 @@ Here's a breakdown of key pod concepts:
 - **Isolation:** While containers from the same image can run on different pods for better isolation, containers within a pod share the same fate. If one container in a pod crashes or terminates, the entire pod is restarted.
 - **Shared Resources:** Containers in a pod share storage (through volumes) and network resources. This enables them to communicate and collaborate seamlessly.
 
-## Pod Commands with Kubectl
+# Pod Commands with Kubectl
 
 - **Creating pod:**
 	- `kubectl run <pod-name> --image <image-name>`
@@ -24,7 +24,7 @@ Here's a breakdown of key pod concepts:
     - `kubectl get pods`
     - This command displays a list of all pods in the Kubernetes cluster and namespace.
 
-## Pod Creation YAML
+# Pod Creation YAML
 
 The provided YAML snippet demonstrates how to define a pod in a YAML file:
 

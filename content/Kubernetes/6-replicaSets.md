@@ -14,7 +14,7 @@ Here's a breakdown of key ReplicaSet features:
 - **Label-Based Selection:** ReplicaSets manage pods that share a set of labels. This allows flexibility in selecting pods for scaling, even if they were created before the ReplicaSet itself.
 - **Dynamic Scaling:** ReplicaSets can be configured for automatic scaling based on various metrics like CPU or memory usage. This helps maintain application health and performance under fluctuating load.
 
-## kubectl Commands for ReplicaSets
+# kubectl Commands for ReplicaSets
 
 - **Scaling ReplicaSets:**
     - `kubectl scale --replicas=<number> replicaset <replicaset-name>`
@@ -26,7 +26,7 @@ Here's a breakdown of key ReplicaSet features:
     - `kubectl describe replicaset <replicaset-name>`
 	    - This command provides detailed information about a specific ReplicaSet, including its pod templates and labels.
 
-## ReplicaSet Creation YAML
+# ReplicaSet Creation YAML
 
 The provided YAML snippet demonstrates how to define a ReplicaSet in a YAML file:
 
@@ -63,11 +63,11 @@ spec:
 - **spec.template:** The pod template used to create new pods for the ReplicaSet. This section essentially defines the pod specification without the `apiVersion` and `kind` fields.
 - **spec.template.metadata.labels:** Labels to be applied to pods created by this ReplicaSet template.
 
-## Label Matching
+# Label Matching
 
 - ReplicaSets manage pods that share at least one label with the ReplicaSet itself.
 - At least one label under `spec.template.metadata.labels` must match at least one label under `metadata.labels`.
 
-## Automatic Pod Scaling
+# Automatic Pod Scaling
 
 While the YAML snippet doesn't explicitly show configuration for automatic pod scaling, ReplicaSets can be configured to scale pods based on resource utilization or other metrics using a Horizontal Pod Autoscaler (HPA).

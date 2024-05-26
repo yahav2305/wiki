@@ -14,7 +14,7 @@ Here's a breakdown of key deployment concepts:
 - **Deployment Strategy:** Deployments implement a rolling update strategy by creating a new ReplicaSet with the updated pods and scaling it up while scaling down the old ReplicaSet with outdated pods.
 - **Rollout History:** Deployments track the history of their updates, allowing you to roll back to a previous version if necessary.
 
-## kubectl Commands for Deployments
+# kubectl Commands for Deployments
 
 - **Viewing Deployment History:**
     
@@ -39,7 +39,7 @@ Here's a breakdown of key deployment concepts:
     - `kubectl rollout resume deployment/<deployment-name>`
 	    - This command resumes a paused rollout.
 
-## Deployment Creation YAML
+# Deployment Creation YAML
 
 The provided YAML snippet demonstrates how to define a Deployment in a YAML file:
 

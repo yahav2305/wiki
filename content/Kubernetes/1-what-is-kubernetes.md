@@ -7,7 +7,7 @@ series_order: 1
 ---
 
 Kubernetes (K8s) is an open-source platform designed to manage containerized applications. It automates deployment, scaling, and operations of containerized workloads, ensuring applications run efficiently and reliably.
-## Key features
+# Key features
 - **Service discovery & load balancing:** Makes applications accessible and distributes traffic for stability.
 - **Storage orchestration:** Automates storage system mounting for deployments.
 - **Automated deployments & rollbacks:** Manages desired application states and transitions smoothly between them.
@@ -15,13 +15,13 @@ Kubernetes (K8s) is an open-source platform designed to manage containerized app
 - **Self-healing:** Restarts failed containers, maintains healthy deployments.
 - **Secret & configuration management:** Stores sensitive information securely.
 - **Scaling:** Scales applications up or down based on needs.
-## Benefits
+# Benefits
 - Efficient resource utilization
 - Faster deployments
 - Reliable application delivery
 - Scalability and elasticity
 - Simplified management of containerized workloads
-## What Kubernetes is not
+# What Kubernetes is not
 - An all-inclusive PaaS solution (focuses on container orchestration, not entire application lifecycle)
 - Application builder or deployer (integrates with CI/CD workflows)
 - Provider of application-level services (databases, middleware, etc.)

@@ -7,7 +7,7 @@ series_order: 3
 ---
 
 Kubectl is a command-line tool that allows you to interact with a Kubernetes cluster's control plane through the Kubernetes API.
-## Basic Syntax
+# Basic Syntax
 ```shell
 kubectl [command] [TYPE] [NAME] [flags]
 ```
@@ -15,13 +15,13 @@ kubectl [command] [TYPE] [NAME] [flags]
 - **TYPE**: The kind of Kubernetes resource (e.g., pod, deployment, service). Case-insensitive, can be singular, plural, or abbreviated.
 - **NAME**: The name of the specific resource (case-sensitive). Omit for details on all resources of that type.
 - **flags**: Optional flags to modify command behavior (e.g., `-o` for output format, `--sort-by` for sorting lists).
-### Examples
+## Examples
 ```shell
 kubectl get pods  # Get details of all pods
 kubectl get pod my-pod  # Get details of pod named "my-pod"
 kubectl delete pod old-pod  # Delete pod named "old-pod"
 ```
-### Specifying Multiple Resources
+## Specifying Multiple Resources
 - You can specify multiple resources by type and name or using files containing resource definitions.
 - By type and name:
     - Group resources of the same type: `kubectl get pod pod1 pod2 pod3`
@@ -29,7 +29,7 @@ kubectl delete pod old-pod  # Delete pod named "old-pod"
 - Using files:
     - Use YAML files for resource definitions (preferred over JSON for readability).
     - Specify files with `-f` flag: `kubectl get -f deployment.yaml`
-## Cluster Access Configuration
+# Cluster Access Configuration
 Kubectl looks for a configuration file named `config` in `$HOME/.kube` by default. You can specify alternative locations using the `KUBECONFIG` environment variable or the `--kubeconfig` flag.
 
 The configuration file (`kubeconfig`) defines:
