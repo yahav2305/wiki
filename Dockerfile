@@ -5,7 +5,6 @@ RUN curl -L https://github.com/gohugoio/hugo/releases/download/v0.125.7/hugo_ext
 RUN apt install ./hugo.deb
 
 COPY . /files
-
 WORKDIR /files
 
 RUN hugo
