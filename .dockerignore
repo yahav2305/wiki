@@ -1,0 +1,9 @@
+.obsidian
+.hugo_build.lock
+.devcontainer
+.vscode
+public/
+Templates/
+dev/
+Dockerfile
+README.md
