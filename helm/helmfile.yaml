@@ -7,7 +7,8 @@ releases:
     namespace: tigera-operator
     createNamespace: true
     chart: projectcalico/tigera-operator
-    version: 
+    version: v3.28.0
+    missingFileHandler: Error
     values:
       - ./values/calico.yaml
     
