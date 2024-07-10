@@ -95,6 +95,25 @@ echo -------------
 echo cni installed
 echo -------------
 
+# helmfile - checksum
+echo -----------------------------------------------
+echo Checking helmfile file signature and installing
+echo -----------------------------------------------
+curl -L --create-dirs --remote-name-all --output-dir /tmp/check https://github.com/helmfile/helmfile/releases/download/v0.166.0/helmfile_0.166.0_{linux_amd64.tar.gz,checksums.txt}
+cd /tmp/check
+sha256sum --ignore-missing -c *checksums.txt
+echo -----------------
+echo Checksum verified
+echo -----------------
+tar xzf helmfile_0.166.0_linux_amd64.tar.gz
+chmod +x helmfile
+sudo mv helmfile /usr/local/bin
+rm *
+cd -
+echo ------------------
+echo Helmfile installed
+echo ------------------
+
 # Configure system network settings
 echo -----------------------------------
 echo Configuring system network settings
