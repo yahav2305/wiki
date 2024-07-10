@@ -163,10 +163,6 @@ sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 sudo chown $(id -u):$(id -g) $HOME/.kube/config
 echo --------------------------------
 echo Kubectl configured successfully.
-echo If you want to setup kubectl for yourself, run the following commands:
-echo mkdir -p $HOME/.kube
-echo sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
-echo sudo chown $(id -u):$(id -g) $HOME/.kube/config
 echo -------------------------------------------------
 
 echo ----------------------
@@ -210,3 +206,4 @@ echo 'complete -o default -F __start_helm h' >>~/.bashrc
 echo ----------------------------------------------
 echo Helm completion and alias enabled successfully 
 echo ----------------------------------------------
+echo Kubernetes configured successfully. Please restart the shell for completion and alias to take effect.
