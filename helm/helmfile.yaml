@@ -1,6 +1,8 @@
 repositories:
   - name: projectcalico
     url: https://docs.tigera.io/calico/charts
+  - name: istio
+    url: https://istio-release.storage.googleapis.com/charts
 
 releases:
   - name: calico
@@ -11,4 +13,28 @@ releases:
     missingFileHandler: Error
     values:
       - ./values/calico.yaml
-    
+  - name: istio-base
+    namespace: istio-system
+    createNamespace: true
+    chart: istio/base
+    version: 1.22.2
+    missingFileHandler: Error
+    values:
+      - ./values/istio-base.yaml
+  - name: istio-cni
+    namespace: istio-system
+    createNamespace: true
+    chart: istio/cni
+    version: 1.22.2
+    missingFileHandler: Error
+    values:
+      - ./values/istio-cni.yaml
+  - name: istiod
+    namespace: istio-system
+    createNamespace: true
+    chart: istio/istiod
+    version: 1.22.2
+    missingFileHandler: Error
+    values:
+      - ./values/istiod.yaml
+  
