@@ -1,5 +1,19 @@
 #!/bin/bash
+
 set -e  # Exit when any command exits with a non-zero status
+
+# Variables
+## Temp dirs
+TEMP_DIR_CONTAINERD=/tmp/containerd
+TEMP_DIR_RUNC=/tmp/runc
+TEMP_DIR_CNI=/tmp/cni
+## Versions
+VERSION_CONTAINERD=1.7.19
+VERSION_RUNC=1.1.13
+VERSION_CNI=1.5.1
+VERSION_KUBERNETES=1.30
+## Kubeadm config
+KUBEADM_CONFIG_CIDR=192.168.0.0/16
 
 # Required apt packages
 echo -----------------------------
@@ -12,10 +26,8 @@ echo ----------------------------
 echo Necessary packages installed
 echo ----------------------------
 
-# Containerd - config
-echo ----------------------
-echo Configuring containerd
-echo ----------------------
+# Containerd
+## Config
 sudo mkdir -p /etc/containerd
 cat <<EOF | sudo tee /etc/containerd/config.toml
 version = 2
@@ -25,75 +37,76 @@ version = 2
     [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.runc.options]
       SystemdCgroup = true
 EOF
-
-# Containerd - checksum
-echo ----------------------------
-echo Checking containerd checksum
-echo ----------------------------
-curl -L --create-dirs --remote-name-all --output-dir /tmp/check https://github.com/containerd/containerd/releases/download/v1.7.19/containerd-1.7.19-linux-amd64.tar.gz{,.sha256sum}
-cd /tmp/check
+echo ---------------------
+echo Containerd configured
+echo ---------------------
+## Download
+curl -L --create-dirs --remote-name-all --output-dir $TEMP_DIR_CONTAINERD https://github.com/containerd/containerd/releases/download/v$VERSION_CONTAINERD/containerd-$VERSION_CONTAINERD-linux-amd64.tar.gz{,.sha256sum}
+echo ---------------------
+echo Containerd downloaded
+echo ---------------------
+cd $TEMP_DIR_CONTAINERD
+## Verify checksum
 sha256sum -c *.sha256sum
-rm *
-cd -
 echo -----------------
 echo Checksum verified
 echo -----------------
-
-# Containerd - install
-echo ------------------------------------------------
-echo Installing containerd and configuring as service
-echo ------------------------------------------------
-## Download & Unpack to bin folder
-sudo curl -L https://github.com/containerd/containerd/releases/download/v1.7.19/containerd-1.7.19-linux-amd64.tar.gz | sudo tar Cxzvf /usr/local/ -
+## Install
+tar xzf containerd-$VERSION_CONTAINERD-linux-amd64.tar.gz
+sudo mv bin/* /usr/local/bin
+echo --------------------
+echo Containerd installed
+echo --------------------
 ## Install containerd as a service
-sudo curl -Lo /etc/systemd/system/containerd.service https://raw.githubusercontent.com/containerd/containerd/v1.7.19/containerd.service
+sudo curl -Lo /etc/systemd/system/containerd.service https://raw.githubusercontent.com/containerd/containerd/v$VERSION_CONTAINERD/containerd.service
 ## Enable the containerd service
 sudo systemctl daemon-reload
 sudo systemctl enable --now containerd
-echo -----------------------------------------------
-echo Containerd installed and configuring as service
-echo -----------------------------------------------
+echo --------------------------------
+echo Containerd configured as service
+echo --------------------------------
+cd -
+rm -rf $TEMP_DIR_CONTAINERD
 
-# runc - checksum and install
-echo -------------------------------------------
-echo Checking runc file signature and installing
-echo -------------------------------------------
-curl -L --create-dirs --remote-name-all --output-dir /tmp/check https://github.com/opencontainers/runc/releases/download/v1.1.13/runc.{amd64,sha256sum}
-cd /tmp/check
+# runc
+## Download
+curl -L --create-dirs --remote-name-all --output-dir $TEMP_DIR_RUNC https://github.com/opencontainers/runc/releases/download/v$VERSION_RUNC/runc.{amd64,sha256sum}
+echo ---------------
+echo Runc Downloaded
+echo ---------------
+cd $TEMP_DIR_RUNC
+# Checksum
 sha256sum --ignore-missing -c *.sha256sum
 echo -----------------
 echo Checksum verified
 echo -----------------
 sudo install -m 755 runc.amd64 /usr/local/sbin/runc
-rm *
-cd -
 echo --------------
 echo Runc installed
 echo --------------
+cd -
+rm -rf $TEMP_DIR_RUNC
 
-# cni - checksum
-echo ------------------------------------------
-echo Checking cni file signature and installing
-echo ------------------------------------------
-curl -L --create-dirs --remote-name-all --output-dir /tmp/check https://github.com/containernetworking/plugins/releases/download/v1.5.1/cni-plugins-linux-amd64-v1.5.1.tgz{,.sha256}
-cd /tmp/check
+# cni
+## Download
+curl -L --create-dirs --remote-name-all --output-dir $TEMP_DIR_CNI https://github.com/containernetworking/plugins/releases/download/v$VERSION_CNI/cni-plugins-linux-amd64-v$VERSION_CNI.tgz{,.sha256}
+echo --------------
+echo cni downloaded
+echo --------------
+cd $TEMP_DIR_CNI
+## Checksum
 sha256sum -c *.sha256
 echo -----------------
 echo Checksum verified
 echo -----------------
-rm *
-cd -
-
-# cni - install
-echo --------------
-echo Installing cni
-echo --------------
-## Download & Unpack to bin folder
+## Install
 sudo mkdir -p /opt/cni/bin
-sudo curl -L https://github.com/containernetworking/plugins/releases/download/v1.5.1/cni-plugins-linux-amd64-v1.5.1.tgz | sudo tar Cxzvf /opt/cni/bin -
-echo -------------
+sudo tar xzf cni-plugins-linux-amd64-v$VERSION_CNI.tgz -C /opt/cni/bin
+echo --------------
 echo cni installed
-echo -------------
+echo --------------
+cd -
+rm -rf $TEMP_DIR_CNI
 
 # Configure system network settings
 echo -----------------------------------
@@ -129,11 +142,11 @@ echo Download and install kubeadm, kubelet, kubectl and helm
 echo -------------------------------------------------------
 sudo mkdir -p -m 755 /etc/apt/keyrings
 # Add Kubernetes GPG key
-curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.30/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+curl -fsSL https://pkgs.k8s.io/core:/stable:/v$VERSION_KUBERNETES/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
 # Add helm GPG key
 curl https://baltocdn.com/helm/signing.asc | sudo gpg --dearmor | sudo tee /usr/share/keyrings/helm.gpg > /dev/null
 # Add Kubernetes apt repository
-echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.30/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
+echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v'$VERSION_KUBERNETES'/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
 # Add helm apt repository
 echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main" | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list
 # Fetch package list and install
@@ -143,14 +156,15 @@ sudo apt-get install -y kubelet kubeadm kubectl helm
 sudo apt-mark hold kubelet kubeadm kubectl
 # Enable the kubelet service
 sudo systemctl enable --now kubelet
-echo ------------------------------------------------------------------
-echo Successfully downloaded and installed kubeadm, kubelet and kubectl
-echo ------------------------------------------------------------------
+echo -------------------------------------------------------------------------------------------
+echo Successfully downloaded and installed kubeadm, kubelet and kubectl. Started kubelet service 
+echo -------------------------------------------------------------------------------------------
 
 echo ------------------------------
 echo Starting cluster using kubeadm
 echo ------------------------------
-sudo kubeadm init --pod-network-cidr=192.168.0.0/16
+# Pod network cidr chosen because that is the default calico value
+sudo kubeadm init --pod-network-cidr=$KUBEADM_CONFIG_CIDR
 echo ----------------------------
 echo Cluster started successfully
 echo ----------------------------
@@ -161,9 +175,9 @@ echo --------------------------
 mkdir -p $HOME/.kube
 sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 sudo chown $(id -u):$(id -g) $HOME/.kube/config
-echo --------------------------------
-echo Kubectl configured successfully.
-echo -------------------------------------------------
+echo -------------------------------
+echo Kubectl configured successfully
+echo -------------------------------
 
 echo ----------------------
 echo Untainting master node
@@ -187,23 +201,18 @@ echo -----------------------------------------------------------
 echo NetworkManager configured to allow calico to work correctly
 echo -----------------------------------------------------------
 
-echo -------------------------------------
-echo Enabling kubectl completion and alias
-echo -------------------------------------
+echo -----------------------------
+echo Enabling completion and alias
+echo -----------------------------
+# Kubectl
 echo 'source <(kubectl completion bash)' >>~/.bashrc
 echo 'alias k=kubectl' >>~/.bashrc
 echo 'complete -o default -F __start_kubectl k' >>~/.bashrc
-echo -------------------------------------------------
-echo Kubectl completion and alias enabled successfully 
-echo -------------------------------------------------
-
-echo ----------------------------------
-echo Enabling helm completion and alias
-echo ----------------------------------
+# Helm
 echo 'source <(helm completion bash)' >>~/.bashrc
 echo 'alias h=helm' >>~/.bashrc
 echo 'complete -o default -F __start_helm h' >>~/.bashrc
-echo ----------------------------------------------
-echo Helm completion and alias enabled successfully 
-echo ----------------------------------------------
+echo -----------------------------------------
+echo completion and alias enabled successfully 
+echo -----------------------------------------
 echo Kubernetes configured successfully. Please restart the shell for completion and alias to take effect.
