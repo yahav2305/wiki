@@ -1,0 +1,32 @@
+installation:
+  enabled: true
+
+apiServer:
+  enabled: true
+
+# Tolerations for the tigera/operator pod.
+tolerations:
+- effect: NoExecute
+  operator: Exists
+- effect: NoSchedule
+  operator: Exists
+
+# NodeSelector for the tigera/operator pod.
+nodeSelector:
+  kubernetes.io/os: linux
+
+# Image and registry configuration for the tigera/operator pod.
+tigeraOperator:
+  image: tigera/operator
+  version: v1.34.0
+  registry: quay.io
+calicoctl:
+  image: docker.io/calico/ctl
+  tag: v3.28.0
+
+kubeletVolumePluginPath: /var/lib/kubelet
+
+# Optionally configure the host and port used to access the Kubernetes API server.
+kubernetesServiceEndpoint:
+  host: ""
+  port: "6443"
