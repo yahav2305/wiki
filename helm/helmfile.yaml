@@ -4,7 +4,10 @@ repositories:
 
 releases:
   - name: calico
+    namespace: tigera-operator
+    createNamespace: true
     chart: projectcalico/tigera-operator
+    version: 
     values:
       - ./values/calico.yaml
     
