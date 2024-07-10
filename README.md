@@ -33,3 +33,11 @@ In order for hugo to play nicely with markdown pages, some rules need to be kept
   - **seriesName** is the name of the series in capital case, which is the name of the subject. This must be the same between all articles in the same subject, and must not be used in articles outside of the subject.
   - **seriesOrder** is the place of the article in the series. 1 means that the article will be first, 2 is second, etc.
 - After the front matter, each article must have the article content itself.
+
+## Helm charts
+
+I use [helmfile](https://github.com/helmfile/helmfile) to deploy all of my helm charts.
+The helmfile iself can be found in the helm directory, and the `values.yaml` of each chart can be found in the values directory within it.
+To deploy the helm charts I use the following commands from inside the server hosting my kubernetes instance:
+1. `helmfile repos`
+2. `helmfile sync`

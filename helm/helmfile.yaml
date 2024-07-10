@@ -1,0 +1,33 @@
+repositories:
+  - name: projectcalico
+    url: https://docs.tigera.io/calico/charts
+
+releases:
+  - name: calico
+    chart: projectcalico/tigera-operator
+    values:
+      - ./values/calico.yaml
+
+  - name: adminer
+    chart: ./charts/app
+    values:
+      - ./values/adminer.yaml
+
+  - name: kanban-app
+    chart: ./charts/app
+    values:
+      - ./values/kanban-app.yaml
+  
+  - name: kanban-ui
+    chart: ./charts/app
+    values:
+      - ./values/kanban-ui.yaml
+
+  - name: ingress-backend
+    chart: stable/nginx-ingress
+    version: 1.36.0
+
+  - name: ingress-controller
+    chart: ./charts/ingress
+    values:
+      - ./values/ingress.yaml
