@@ -7,11 +7,13 @@ set -e  # Exit when any command exits with a non-zero status
 TEMP_DIR_CONTAINERD=/tmp/containerd
 TEMP_DIR_RUNC=/tmp/runc
 TEMP_DIR_CNI=/tmp/cni
+TEMP_DIR_HELMFILE=/tmp/helmfile
 ## Versions
 VERSION_CONTAINERD=1.7.19
 VERSION_RUNC=1.1.13
 VERSION_CNI=1.5.1
 VERSION_KUBERNETES=1.30
+VERSION_HELMFILE=0.166.0
 ## Kubeadm config
 KUBEADM_CONFIG_CIDR=192.168.0.0/16
 
@@ -108,24 +110,27 @@ echo --------------
 cd -
 rm -rf $TEMP_DIR_CNI
 
-# helmfile - checksum
-echo -----------------------------------------------
-echo Checking helmfile file signature and installing
-echo -----------------------------------------------
-curl -L --create-dirs --remote-name-all --output-dir /tmp/check https://github.com/helmfile/helmfile/releases/download/v0.166.0/helmfile_0.166.0_{linux_amd64.tar.gz,checksums.txt}
-cd /tmp/check
+# helmfile
+## Download
+curl -L --create-dirs --remote-name-all --output-dir $TEMP_DIR_HELMFILE https://github.com/helmfile/helmfile/releases/download/v"$VERSION_HELMFILE"/helmfile_"$VERSION_HELMFILE"_{linux_amd64.tar.gz,checksums.txt}
+echo -------------------
+echo Helmfile downloaded
+echo -------------------
+cd $TEMP_DIR_HELMFILE
+## Checksum
 sha256sum --ignore-missing -c *checksums.txt
 echo -----------------
 echo Checksum verified
 echo -----------------
-tar xzf helmfile_0.166.0_linux_amd64.tar.gz
+# Install
+tar xzf helmfile_"$VERSION_HELMFILE"_linux_amd64.tar.gz
 chmod +x helmfile
 sudo mv helmfile /usr/local/bin
-rm *
-cd -
 echo ------------------
 echo Helmfile installed
 echo ------------------
+rm -rf $TEMP_DIR_HELMFILE
+cd -
 
 # Configure system network settings
 echo -----------------------------------
@@ -231,6 +236,10 @@ echo 'complete -o default -F __start_kubectl k' >>~/.bashrc
 echo 'source <(helm completion bash)' >>~/.bashrc
 echo 'alias h=helm' >>~/.bashrc
 echo 'complete -o default -F __start_helm h' >>~/.bashrc
+# Helmfile
+echo 'source <(helmfile completion bash)' >>~/.bashrc
+echo 'alias hf=helmfile' >>~/.bashrc
+echo 'complete -o default -F __start_helmfile hf' >>~/.bashrc
 echo -----------------------------------------
 echo completion and alias enabled successfully 
 echo -----------------------------------------
