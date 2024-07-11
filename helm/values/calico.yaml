@@ -4,6 +4,9 @@ installation:
 apiServer:
   enabled: true
 
+defaultFelixConfiguration:
+  enabled: false
+
 # Tolerations for the tigera/operator pod.
 tolerations:
 - effect: NoExecute
