@@ -38,6 +38,4 @@ In order for hugo to play nicely with markdown pages, some rules need to be kept
 
 I use [helmfile](https://github.com/helmfile/helmfile) to deploy all of my helm charts.
 The helmfile iself can be found in the helm directory, and the `values.yaml` of each chart can be found in the values directory within it.
-To deploy the helm charts I use the following commands from inside the server hosting my kubernetes instance:
-1. `helmfile repos`
-2. `helmfile sync`
+To deploy the helm charts I run `helmfile sync` from inside the server hosting my kubernetes instance in the helm directory.
