@@ -16,6 +16,19 @@ VERSION_KUBERNETES=1.30
 VERSION_HELMFILE=0.166.0
 ## Kubeadm config
 KUBEADM_CONFIG_CIDR=192.168.0.0/16
+## Storage
+DRIVE_NAME=vda
+PART_NUMBER=3
+
+# Resize fs to use whole disk
+echo -------------------------------------
+echo Resizing filesystem to use whole disk
+echo -------------------------------------
+sudo growpart /dev/$DRIVE_NAME $PART_NUMBER
+sudo resize2fs -p /dev/$DRIVE_NAME$PART_NUMBER
+echo ------------------
+echo Filesystem resized
+echo ------------------
 
 # Required apt packages
 echo -----------------------------
