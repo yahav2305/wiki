@@ -3,6 +3,8 @@ repositories:
     url: https://docs.tigera.io/calico/charts
   - name: istio
     url: https://istio-release.storage.googleapis.com/charts
+  - name: openebs
+    url: https://openebs.github.io/openebs
 
 releases:
   - name: calico
@@ -13,4 +15,13 @@ releases:
     missingFileHandler: Error
     values:
       - ./values/calico.yaml
+  - name: openebs
+    namespace: openebs
+    createNamespace: true
+    chart: openebs/openebs
+    version: 4.1.0
+    missingFileHandler: Error
+    values:
+      - ./values/openebs.yaml
+  
   
