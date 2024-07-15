@@ -1,0 +1,15 @@
+apiVersion: kiali.io/v1alpha1
+kind: Kiali
+metadata:
+  name: kiali
+spec:
+  # custom_dashboards:
+  # - name: "envoy"
+  deployment:
+    resources:
+      requests:
+        memory: "64Mi"
+        cpu: "10m"
+      limits:
+        memory: "500Mi"
+        cpu: "1000m"

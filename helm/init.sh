@@ -19,3 +19,7 @@ helm upgrade istio-cni istio/cni --install --atomic --create-namespace --values 
 helm upgrade istiod istio/istiod --install --atomic --create-namespace --values ./values/istiod.yaml --version 1.22.2 --namespace istio-system
 kubectl label namespace default istio-injection=true # Enable istio sidecar injection in relevant namespaces before deploying apps in them
 
+# Kiali
+kubectl create -f https://operatorhub.io/install/kiali.yaml # Install Kiali operator
+kubectl apply -f ./resources/kiali-cr.yaml -n istio-system # Install Kiali CR
+kubectl wait --for=condition=Successful kiali kiali -n istio-system # Wait for the Kiali CR to create successfully
