@@ -7,13 +7,11 @@ set -e  # Exit when any command exits with a non-zero status
 TEMP_DIR_CONTAINERD=/tmp/containerd
 TEMP_DIR_RUNC=/tmp/runc
 TEMP_DIR_CNI=/tmp/cni
-TEMP_DIR_HELMFILE=/tmp/helmfile
 ## Versions
 VERSION_CONTAINERD=1.7.19
 VERSION_RUNC=1.1.13
 VERSION_CNI=1.5.1
 VERSION_KUBERNETES=1.30
-VERSION_HELMFILE=0.166.0
 ## Kubeadm config
 KUBEADM_CONFIG_CIDR=192.168.0.0/16
 ## Storage
@@ -123,28 +121,6 @@ echo --------------
 cd -
 rm -rf $TEMP_DIR_CNI
 
-# helmfile
-## Download
-curl -L --create-dirs --remote-name-all --output-dir $TEMP_DIR_HELMFILE https://github.com/helmfile/helmfile/releases/download/v"$VERSION_HELMFILE"/helmfile_"$VERSION_HELMFILE"_{linux_amd64.tar.gz,checksums.txt}
-echo -------------------
-echo Helmfile downloaded
-echo -------------------
-cd $TEMP_DIR_HELMFILE
-## Checksum
-sha256sum --ignore-missing -c *checksums.txt
-echo -----------------
-echo Checksum verified
-echo -----------------
-# Install
-tar xzf helmfile_"$VERSION_HELMFILE"_linux_amd64.tar.gz
-chmod +x helmfile
-sudo mv helmfile /usr/local/bin
-echo ------------------
-echo Helmfile installed
-echo ------------------
-rm -rf $TEMP_DIR_HELMFILE
-cd -
-
 # Configure system network settings
 echo -----------------------------------
 echo Configuring system network settings
@@ -237,6 +213,8 @@ EOF
 echo -----------------------------------------------------------
 echo NetworkManager configured to allow calico to work correctly
 echo -----------------------------------------------------------
+
+
 
 echo -----------------------------
 echo Enabling completion and alias
