@@ -214,7 +214,13 @@ echo -----------------------------------------------------------
 echo NetworkManager configured to allow calico to work correctly
 echo -----------------------------------------------------------
 
-
+echo -------------------------------------
+echo Installing operator lifecycle manager
+echo -------------------------------------
+curl -sL https://github.com/operator-framework/operator-lifecycle-manager/releases/download/v0.28.0/install.sh | bash -s v0.28.0
+echo ------------------------------------
+echo Operator lifecycle manager installed
+echo ------------------------------------
 
 echo -----------------------------
 echo Enabling completion and alias
