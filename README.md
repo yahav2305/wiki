@@ -34,8 +34,39 @@ In order for hugo to play nicely with markdown pages, some rules need to be kept
   - **seriesOrder** is the place of the article in the series. 1 means that the article will be first, 2 is second, etc.
 - After the front matter, each article must have the article content itself.
 
-## Helm charts
+# Infrastructure for my wiki
 
-I use a bash script to deploy all of my helm charts.
-The bash file iself can be found in the helm directory, and the `values.yaml` of each chart can be found in the values directory within it.
-To deploy the helm charts and any necessary kubernetes resources I run `init.sh` from inside the server hosting my kubernetes instance in the helm directory.
+This document details the infrastructure components used to deploy and manage my wiki. 
+
+## Kubernetes Platform
+
+A single [NetCup](https://www.netcup.eu/) virtual machine serves as the foundation for the Kubernetes cluster (version 1.30). This cost-effective solution caters to current budgetary constraints. Ideally, a highly available (HA) configuration with three dedicated control plane nodes and multiple worker nodes would be implemented for optimal performance and redundancy.
+
+The `k8s-install.sh` script within the `kubernetes` directory provides detailed instructions on the Kubernetes deployment process using the kubeadm tool.
+
+## Resource Management
+
+A centralized Bash script located in the `helm` directory streamlines the deployment of all Kubernetes resources, including Helm charts, operators, and other configurations.
+
+* Helm charts leverage separate `values.yaml` files stored within their respective directories inside the `values` subfolder.
+* Custom or standard resources (specified in YAML files) are located in the `resources` directory inside the `helm` subfolder.
+
+To initiate the deployment of Kubernetes resources and Helm charts, I execute the `init.sh` script directly on the server hosting the Kubernetes cluster within the `helm` directory.
+
+### Network Connectivity
+
+[Calico](https://www.tigera.io/project-calico/) serves as the selected Container Network Interface (CNI) for the Kubernetes cluster. Its comprehensive feature set coupled with a straightforward installation process made it the optimal choice over Weave or Flannel.
+
+### Service Mesh Security
+
+[Istio](https://istio.io/latest/) provides a service mesh with mutual TLS (mTLS) encryption for secure communication between pods. This safeguards against potential eavesdropping attempts on internal cluster network traffic. Istio efficiently manages its own certificates, minimizing operational overhead.
+
+### Istio Service Mesh Monitoring
+
+[Kiali](https://kiali.io/) offers real-time monitoring capabilities for the Istio service mesh. The Kiali operator facilitates its deployment, while secure access to the Kiali dashboard is achieved via the following command:
+
+```
+kubectl port-forward svc/kiali 20001:20001 -n istio-system
+```
+
+This configuration ensures secure access to the Kiali dashboard within the current single-user management context.
