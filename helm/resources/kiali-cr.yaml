@@ -5,6 +5,8 @@ metadata:
 spec:
   # custom_dashboards:
   # - name: "envoy"
+  auth:
+    strategy: anonymous
   deployment:
     resources:
       requests:
