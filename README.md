@@ -70,3 +70,34 @@ kubectl port-forward svc/kiali 20001:20001 -n istio-system
 ```
 
 This configuration ensures secure access to the Kiali dashboard within the current single-user management context.
+
+Absolutely, here's the improved section on Loki and Prometheus for your README:
+
+### Log Aggregation with Loki
+
+[Grafana Loki](https://grafana.com/oss/loki/) serves as the central repository for application and infrastructure logs generated across the Kubernetes cluster. Loki's suitability for semi-structured and unstructured data, prevalent in modern log formats, makes it a preferable choice over alternatives like Elasticsearch.
+
+Logs from various applications running within the cluster are forwarded to the following endpoint:
+
+```
+http://loki-gateway.loki.svc.cluster.local/loki/api/v1/push
+```
+
+For integration with Grafana for visualization purposes, Loki is configured as a data source using the following URL:
+
+```
+http://loki-gateway.loki.svc.cluster.local/
+```
+
+### Metrics Collection with Prometheus
+
+[Prometheus](https://prometheus.io/) is responsible for gathering and storing metrics from all cluster components, including resource utilization of containers and nodes. 
+
+To expedite deployment, Prometheus was installed as a Helm chart, incorporating a node collector and alert manager. While this approach streamlines initial setup, a future migration to the Prometheus operator is envisioned. The operator offers finer-grained control and potentially enhanced scalability.
+
+Prometheus UI is accessible using the following commands:
+```
+export POD_NAME=$(kubectl get pods --namespace prometheus -l "app.kubernetes.io/name=prometheus,app.kubernetes.io/instance=prometheus" -o jsonpath="{.items[0].metadata.name}")
+kubectl --namespace prometheus port-forward $POD_NAME 9090
+```
+And then entering http://localhost:9090/ in the web browser.
