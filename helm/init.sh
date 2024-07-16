@@ -7,6 +7,7 @@ helm repo add projectcalico https://docs.tigera.io/calico/charts
 helm repo add istio https://istio-release.storage.googleapis.com/charts
 helm repo add openebs https://openebs.github.io/openebs
 helm repo add grafana https://grafana.github.io/helm-charts
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 
 # Calico
 helm upgrade calico projectcalico/tigera-operator --install --atomic --create-namespace --values ./values/calico.yaml --version v3.28.0 --namespace tigera-operator
@@ -27,3 +28,6 @@ kubectl wait --for=condition=Successful kiali kiali -n istio-system # Wait for t
 
 # Grafana Loki
 helm upgrade loki grafana/loki --install --atomic --create-namespace --values ./values/loki.yaml --version 6.6.6 --namespace loki
+
+# Prometheus
+helm upgrade prometheus prometheus-community/prometheus --install --atomic --create-namespace --values ./values/prometheus.yaml --version 25.24.0 --namespace prometheus
