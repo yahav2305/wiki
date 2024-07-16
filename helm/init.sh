@@ -26,7 +26,7 @@ kubectl create -f https://operatorhub.io/install/kiali.yaml # Install Kiali oper
 kubectl apply -f ./resources/kiali-cr.yaml -n istio-system # Install Kiali CR
 kubectl wait --for=condition=Successful kiali kiali -n istio-system # Wait for the Kiali CR to create successfully
 
-# Grafana Loki
+# Loki
 helm upgrade loki grafana/loki --install --atomic --create-namespace --values ./values/loki.yaml --version 6.6.6 --namespace loki
 
 # Prometheus
