@@ -14,6 +14,7 @@ helm upgrade calico projectcalico/tigera-operator --install --atomic --create-na
 
 # OpenEBS
 helm upgrade openebs openebs/openebs --install --atomic --create-namespace --values ./values/openebs.yaml --version 4.1.0 --namespace openebs
+kubectl patch storageclass openebs-hostpath -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}' # Set openebs storage class as default
 
 # Istio
 helm upgrade istio-base istio/base --install --atomic --create-namespace --values ./values/istio-base.yaml --version 1.22.2 --namespace istio-system
