@@ -32,3 +32,6 @@ helm upgrade loki grafana/loki --install --atomic --create-namespace --values ./
 
 # Prometheus
 helm upgrade prometheus prometheus-community/prometheus --install --atomic --create-namespace --values ./values/prometheus.yaml --version 25.24.0 --namespace prometheus
+
+# Grafana
+helm upgrade grafana grafana/grafana --install --atomic --create-namespace --values ./values/grafana.yaml --version 8.3.4 --namespace grafana
