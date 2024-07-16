@@ -101,3 +101,17 @@ export POD_NAME=$(kubectl get pods --namespace prometheus -l "app.kubernetes.io/
 kubectl --namespace prometheus port-forward $POD_NAME 9090
 ```
 And then entering http://localhost:9090/ in the web browser.
+
+Alert manager UI is accessible using the following commands:
+```
+export POD_NAME=$(kubectl get pods --namespace prometheus -l "app.kubernetes.io/name=alertmanager,app.kubernetes.io/instance=prometheus" -o jsonpath="{.items[0].metadata.name}")
+kubectl --namespace prometheus port-forward $POD_NAME 9093
+```
+And then entering http://localhost:9093/ in the web browser.
+
+PushGateWay UI is accessible using the following commands:
+```
+export POD_NAME=$(kubectl get pods --namespace prometheus -l "app.kubernetes.io/instance=prometheus,app.kubernetes.io/name=prometheus-pushgateway" -o jsonpath="{.items[0].metadata.name}")
+kubectl --namespace prometheus port-forward $POD_NAME 9091
+```
+And then entering http://localhost:9091/ in the web browser.
