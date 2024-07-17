@@ -35,3 +35,6 @@ helm upgrade prometheus prometheus-community/prometheus --install --atomic --cre
 
 # Grafana
 helm upgrade grafana grafana/grafana --install --atomic --create-namespace --values ./values/grafana.yaml --version 8.3.4 --namespace grafana
+
+# Promtail
+helm upgrade protmail grafana/promtail --install --atomic --create-namespace --values ./values/promtail.yaml --version 6.16.4 --namespace promtail
