@@ -28,13 +28,13 @@ kubectl apply -f ./resources/kiali-cr.yaml -n istio-system # Install Kiali CR
 kubectl wait --for=condition=Successful kiali kiali -n istio-system # Wait for the Kiali CR to create successfully
 
 # Loki
-helm upgrade loki grafana/loki --install --atomic --create-namespace --values ./values/loki.yaml --version 6.6.6 --namespace loki
+helm upgrade loki grafana/loki --install --atomic --create-namespace --values ./values/loki.yaml --version 6.6.6 --namespace monitoring
 
 # Prometheus
-helm upgrade prometheus prometheus-community/prometheus --install --atomic --create-namespace --values ./values/prometheus.yaml --version 25.24.0 --namespace prometheus
+helm upgrade prometheus prometheus-community/prometheus --install --atomic --create-namespace --values ./values/prometheus.yaml --version 25.24.0 --namespace monitoring
 
 # Grafana
-helm upgrade grafana grafana/grafana --install --atomic --create-namespace --values ./values/grafana.yaml --version 8.3.4 --namespace grafana
+helm upgrade grafana grafana/grafana --install --atomic --create-namespace --values ./values/grafana.yaml --version 8.3.4 --namespace monitoring
 
 # Promtail
-helm upgrade protmail grafana/promtail --install --atomic --create-namespace --values ./values/promtail.yaml --version 6.16.4 --namespace promtail
+helm upgrade protmail grafana/promtail --install --atomic --create-namespace --values ./values/promtail.yaml --version 6.16.4 --namespace monitoring

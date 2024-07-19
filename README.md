@@ -80,13 +80,13 @@ Absolutely, here's the improved section on Loki and Prometheus for your README:
 Logs from various applications running within the cluster are forwarded to the following endpoint:
 
 ```
-http://loki-gateway.loki.svc.cluster.local/loki/api/v1/push
+http://loki-gateway.monitoring.svc.cluster.local/loki/api/v1/push
 ```
 
 For integration with Grafana for visualization purposes, Loki is configured as a data source using the following URL:
 
 ```
-http://loki-gateway.loki.svc.cluster.local/
+http://loki-gateway.monitoring.svc.cluster.local/
 ```
 
 ### Metrics Collection with Prometheus
@@ -97,22 +97,22 @@ To expedite deployment, Prometheus was installed as a Helm chart, incorporating 
 
 Prometheus UI is accessible using the following commands:
 ```
-export POD_NAME=$(kubectl get pods --namespace prometheus -l "app.kubernetes.io/name=prometheus,app.kubernetes.io/instance=prometheus" -o jsonpath="{.items[0].metadata.name}")
-kubectl --namespace prometheus port-forward $POD_NAME 9090
+export POD_NAME=$(kubectl get pods --namespace monitoring -l "app.kubernetes.io/name=prometheus,app.kubernetes.io/instance=prometheus" -o jsonpath="{.items[0].metadata.name}")
+kubectl --namespace monitoring port-forward $POD_NAME 9090
 ```
 And then entering http://localhost:9090/ in the web browser.
 
 Alert manager UI is accessible using the following commands:
 ```
-export POD_NAME=$(kubectl get pods --namespace prometheus -l "app.kubernetes.io/name=alertmanager,app.kubernetes.io/instance=prometheus" -o jsonpath="{.items[0].metadata.name}")
-kubectl --namespace prometheus port-forward $POD_NAME 9093
+export POD_NAME=$(kubectl get pods --namespace monitoring -l "app.kubernetes.io/name=alertmanager,app.kubernetes.io/instance=prometheus" -o jsonpath="{.items[0].metadata.name}")
+kubectl --namespace monitoring port-forward $POD_NAME 9093
 ```
 And then entering http://localhost:9093/ in the web browser.
 
 PushGateWay UI is accessible using the following commands:
 ```
-export POD_NAME=$(kubectl get pods --namespace prometheus -l "app.kubernetes.io/instance=prometheus,app.kubernetes.io/name=prometheus-pushgateway" -o jsonpath="{.items[0].metadata.name}")
-kubectl --namespace prometheus port-forward $POD_NAME 9091
+export POD_NAME=$(kubectl get pods --namespace monitoring -l "app.kubernetes.io/instance=prometheus,app.kubernetes.io/name=prometheus-pushgateway" -o jsonpath="{.items[0].metadata.name}")
+kubectl --namespace monitoring port-forward $POD_NAME 9091
 ```
 And then entering http://localhost:9091/ in the web browser.
 
@@ -130,16 +130,14 @@ This combination of factors makes Grafana an ideal choice for visualizing the we
 
 I access the grafana dashboard with the following commands:
 ```
-export POD_NAME=$(kubectl get pods --namespace grafana -l "app.kubernetes.io/name=grafana,app.kubernetes.io/instance=grafana" -o jsonpath="{.items[0].metadata.name}")
-kubectl --namespace grafana port-forward $POD_NAME 3000
+export POD_NAME=$(kubectl get pods --namespace monitoring -l "app.kubernetes.io/name=grafana,app.kubernetes.io/instance=grafana" -o jsonpath="{.items[0].metadata.name}")
+kubectl --namespace monitoring port-forward $POD_NAME 3000
 ```
 
 I get the admin password with the following command:
 ```
-kubectl get secret --namespace grafana grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
+kubectl get secret --namespace monitoring grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
 ```
-
-Here's the improved section on Promtail for your README:
 
 ### Log Collection with Promtail
 

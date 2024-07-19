@@ -30,7 +30,7 @@ datasources:
     - name: Loki
       type: loki
       access: direct
-      url: http://loki-gateway.loki.svc.cluster.local/
+      url: http://loki-gateway/
       editable: false
       basicAuth: false
       orgId: 1
@@ -40,7 +40,7 @@ datasources:
         httpHeaderValue1: '1'
     - name: Prometheus
       type: prometheus
-      url: http://prometheus-server.prometheus.svc.cluster.local
+      url: http://prometheus-server/
       access: proxy
       isDefault: false
       editable: false
