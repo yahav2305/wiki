@@ -33,3 +33,7 @@ helm upgrade grafana grafana/grafana --install --atomic --create-namespace --val
 
 # Promtail
 helm upgrade protmail grafana/promtail --install --atomic --create-namespace --values ./values/promtail.yaml --version 6.16.4 --namespace monitoring
+
+# Kube-Bench
+kubectl apply -f ./resources/kube-bench.yaml
+kubectl logs jobs/kube-bench
