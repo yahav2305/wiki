@@ -15,3 +15,8 @@ spec:
       limits:
         memory: "500Mi"
         cpu: "1000m"
+  spec:
+  external_services:
+    prometheus:
+      # Prometheus service name is "metrics" and is in the "telemetry" namespace
+      url: "http://metrics.telemetry:9090/"

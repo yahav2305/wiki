@@ -71,8 +71,6 @@ kubectl port-forward svc/kiali 20001:20001 -n istio-system
 
 This configuration ensures secure access to the Kiali dashboard within the current single-user management context.
 
-Absolutely, here's the improved section on Loki and Prometheus for your README:
-
 ### Log Aggregation with Loki
 
 [Grafana Loki](https://grafana.com/oss/loki/) serves as the central repository for application and infrastructure logs generated across the Kubernetes cluster. Loki's suitability for semi-structured and unstructured data, prevalent in modern log formats, makes it a preferable choice over alternatives like Elasticsearch.
@@ -115,8 +113,6 @@ export POD_NAME=$(kubectl get pods --namespace monitoring -l "app.kubernetes.io/
 kubectl --namespace monitoring port-forward $POD_NAME 9091
 ```
 And then entering http://localhost:9091/ in the web browser.
-
-Here's the improved section on Grafana for your README:
 
 ### Visualization with Grafana
 
