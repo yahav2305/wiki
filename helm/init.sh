@@ -8,6 +8,8 @@ helm repo add istio https://istio-release.storage.googleapis.com/charts
 helm repo add openebs https://openebs.github.io/openebs
 helm repo add grafana https://grafana.github.io/helm-charts
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm repo add falcosecurity https://falcosecurity.github.io/charts
+helm repo update
 
 # Calico
 helm upgrade calico projectcalico/tigera-operator --install --atomic --create-namespace --values ./values/calico.yaml --version v3.28.0 --namespace tigera-operator
@@ -34,6 +36,10 @@ helm upgrade grafana grafana/grafana --install --atomic --create-namespace --val
 # Promtail
 helm upgrade protmail grafana/promtail --install --atomic --create-namespace --values ./values/promtail.yaml --version 6.16.4 --namespace monitoring
 
+# Falco
+helm upgrade falco falcosecurity/falco --install --atomic --create-namespace --values ./values/falco.yaml --version 4.6.3 --namespace falco
+
 # Kube-Bench
 kubectl apply -f ./resources/kube-bench.yaml
 kubectl logs jobs/kube-bench
+kubectl delete job kube-bench

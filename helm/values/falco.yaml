@@ -1,0 +1,78 @@
+# Default values for Falco.
+
+###############################
+# General deployment settings #
+###############################
+
+resources:
+  # -- Although resources needed are subjective on the actual workload we provide
+  # a sane defaults ones. If you have more questions or concerns, please refer
+  # to #falco slack channel for more info about it.
+  requests:
+    cpu: 100m
+    memory: 512Mi
+  # -- Maximum amount of resources that Falco container could get.
+  # If you are enabling more than one source in falco, than consider to increase
+  # the cpu limits.
+  limits:
+    cpu: 1000m
+    memory: 1024Mi
+
+#########################
+# Scenario requirements #
+#########################
+
+# Collectors for data enrichment (scenario requirement)
+collectors:
+  # -- Enable/disable all the metadata collectors.
+  enabled: true
+
+  docker:
+    # -- Enable Docker support.
+    enabled: true
+
+  containerd:
+    # -- Enable ContainerD support.
+    enabled: true
+    # -- The path of the ContainerD socket.
+    socket: /run/containerd/containerd.sock
+
+  crio:
+    # -- Enable CRI-O support.
+    enabled: true
+
+########################
+# Falco integrations   #
+########################
+
+# -- For configuration values, see https://github.com/falcosecurity/charts/blob/master/charts/falcosidekick/values.yaml
+falcosidekick:
+  # -- Enable falcosidekick deployment.
+  enabled: true
+
+  webui:
+    # -- enable Falcosidekick-UI
+    enabled: true
+    # -- number of running pods
+    replicaCount: 2
+    # -- Disable the basic auth
+    disableauth: true
+
+    service:
+      # -- The web UI service type
+      type: ClusterIP
+      # -- The web UI service port dor the falcosidekick-ui
+      port: 2802
+    # -- The resources for the webUI pod
+    resources:
+      limits:
+        cpu: 100m
+        memory: 128Mi
+      requests:
+        cpu: 100m
+        memory: 128Mi
+    redis:
+      # -- Is mutually exclusive with webui.externalRedis.enabled
+      enabled: true
+      # -- The resources for the redis pod
+      resources: {}

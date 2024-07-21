@@ -150,6 +150,17 @@ echo -----------------------------------------------
 echo System network settings Configured successfully
 echo -----------------------------------------------
 
+# Increasing inotify limits for falco helm chart
+echo ----------------------------------------------
+echo Increasing inotify limits for falco helm chart
+echo ----------------------------------------------
+echo "fs.inotify.max_user_instances=8192" | sudo tee -a /etc/sysctl.conf
+echo "fs.inotify.max_user_watches=1048576" | sudo tee -a /etc/sysctl.conf
+sudo sysctl -p
+echo ----------------------------------------------
+echo Inotify limits for falco helm chart increased
+echo ----------------------------------------------
+
 echo -------------------------------------------------------
 echo Download and install kubeadm, kubelet, kubectl and helm
 echo -------------------------------------------------------
