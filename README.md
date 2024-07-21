@@ -61,16 +61,6 @@ To initiate the deployment of Kubernetes resources and Helm charts, I execute th
 
 [Istio](https://istio.io/latest/) provides a service mesh with mutual TLS (mTLS) encryption for secure communication between pods. This safeguards against potential eavesdropping attempts on internal cluster network traffic. Istio efficiently manages its own certificates, minimizing operational overhead.
 
-### Istio Service Mesh Monitoring
-
-[Kiali](https://kiali.io/) offers real-time monitoring capabilities for the Istio service mesh. The Kiali operator facilitates its deployment, while secure access to the Kiali dashboard is achieved via the following command:
-
-```
-kubectl port-forward svc/kiali 20001:20001 -n istio-system
-```
-
-This configuration ensures secure access to the Kiali dashboard within the current single-user management context.
-
 ### Log Aggregation with Loki
 
 [Grafana Loki](https://grafana.com/oss/loki/) serves as the central repository for application and infrastructure logs generated across the Kubernetes cluster. Loki's suitability for semi-structured and unstructured data, prevalent in modern log formats, makes it a preferable choice over alternatives like Elasticsearch.
