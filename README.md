@@ -135,3 +135,22 @@ kubectl get secret --namespace monitoring grafana -o jsonpath="{.data.admin-pass
 * **DaemonSet Scalability:**  Deployment as a DaemonSet ensures automatic log collection from any node added to the cluster, enhancing scalability.
 
 These combined benefits make Promtail an ideal solution for collecting and routing logs within my Kubernetes environment.
+
+### Security Monitoring with Falco
+
+[Falco](https://falco.org/) is a runtime security scanner deployed as a Helm chart that provides real-time threat detection for my Kubernetes cluster.
+Falco continuously monitors kernel events to identify potential security events and generate alerts accordingly.
+
+Integrating Falco into my infrastructure offered several advantages:
+
+* **Enhanced Security Posture:**  Real-time monitoring helps identify and mitigate potential security threats before they escalate into major incidents.
+* **Actionable Alerts:**  Falco generates alerts for suspicious activity, allowing security teams to take swift action and investigate potential breaches.
+* **Helm Chart Deployment:**  The Helm chart simplifies deployment and streamlines configuration management for Falco.
+
+By leveraging Falco's capabilities, I strengthed the security posture of my Kubernetes cluster and proactively addressed potential security threats.
+
+I access the Falco dashboard with the following commands:
+```
+kubectl port-forward -n falco svc/falco-falcosidekick-ui 2802:2802
+```
+And then enter `http://localhost:2802` in my browser.
