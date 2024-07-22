@@ -3,13 +3,20 @@
 {
 	"name": "Go",
 	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
-	"image": "mcr.microsoft.com/devcontainers/go:1-1.22-bookworm",
+	"image": "mcr.microsoft.com/devcontainers/base:ubuntu22.04",
 
 	// Features to add to the dev container. More info: https://containers.dev/features.
 	"features": {
+		"ghcr.io/devcontainers/features/git:1": {},
 		"ghcr.io/devcontainers/features/hugo:1": {
 			"extended": true,
 			"version": "0.127.0"
+		},
+		"ghcr.io/devcontainers/features/terraform:1": {
+			"version": "1.9.0"
+		},
+		"ghcr.io/devcontainers/features/kubectl-helm-minikube:1": {
+			"version": "1.28"
 		}
 	},
 
