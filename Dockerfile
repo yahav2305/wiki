@@ -9,6 +9,6 @@ WORKDIR /files
 
 RUN hugo
 
-FROM nginx:1.26.1
+FROM nginxinc/nginx-unprivileged:1.27.0-alpine-slim
 
 COPY --from=build /files/public /usr/share/nginx/html
