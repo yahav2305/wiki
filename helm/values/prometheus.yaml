@@ -1,0 +1,31 @@
+server:
+  persistentVolume:
+    enabled: true
+
+    ## Prometheus server data Persistent Volume access modes
+    ## Must match those of existing PV or dynamic provisioner
+    ## Ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
+    accessModes:
+      - ReadWriteOnce
+
+    ## Prometheus server data Persistent Volume size
+    size: 8Gi
+
+    ## Prometheus server data Persistent Volume Storage Class
+    storageClass: openebs-hostpath
+
+  ## Prometheus server resource requests and limits
+  ## Ref: http://kubernetes.io/docs/user-guide/compute-resources/
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+
+  ## Prometheus data retention period (default if not specified is 15 days)
+  retention: "15d"
+
+  ## Prometheus' data retention size. Supported units: B, KB, MB, GB, TB, PB, EB.
+  retentionSize: "8GB"

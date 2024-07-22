@@ -1,0 +1,20 @@
+defaults:
+  global:
+
+    # Used to locate istiod.
+    istioNamespace: istio-system
+
+    externalIstiod: false
+    remotePilotAddress: ""
+
+    # Platform where Istio is deployed. Possible values are: "openshift", "gcp".
+    # An empty value means it is a vanilla Kubernetes distribution, therefore no special
+    # treatment will be considered.
+    platform: ""
+
+  base:
+
+    # For istioctl usage to disable istio config crds in base
+    enableIstioConfigCRDs: true
+
+  defaultRevision: "default"

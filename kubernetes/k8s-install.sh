@@ -150,6 +150,17 @@ echo -----------------------------------------------
 echo System network settings Configured successfully
 echo -----------------------------------------------
 
+# Increasing inotify limits for falco helm chart
+echo ----------------------------------------------
+echo Increasing inotify limits for falco helm chart
+echo ----------------------------------------------
+echo "fs.inotify.max_user_instances=8192" | sudo tee -a /etc/sysctl.conf
+echo "fs.inotify.max_user_watches=1048576" | sudo tee -a /etc/sysctl.conf
+sudo sysctl -p
+echo ----------------------------------------------
+echo Inotify limits for falco helm chart increased
+echo ----------------------------------------------
+
 echo -------------------------------------------------------
 echo Download and install kubeadm, kubelet, kubectl and helm
 echo -------------------------------------------------------
@@ -214,6 +225,14 @@ echo -----------------------------------------------------------
 echo NetworkManager configured to allow calico to work correctly
 echo -----------------------------------------------------------
 
+echo -------------------------------------
+echo Installing operator lifecycle manager
+echo -------------------------------------
+curl -sL https://github.com/operator-framework/operator-lifecycle-manager/releases/download/v0.28.0/install.sh | bash -s v0.28.0
+echo ------------------------------------
+echo Operator lifecycle manager installed
+echo ------------------------------------
+
 echo -----------------------------
 echo Enabling completion and alias
 echo -----------------------------
@@ -225,6 +244,10 @@ echo 'complete -o default -F __start_kubectl k' >>~/.bashrc
 echo 'source <(helm completion bash)' >>~/.bashrc
 echo 'alias h=helm' >>~/.bashrc
 echo 'complete -o default -F __start_helm h' >>~/.bashrc
+# Helmfile
+echo 'source <(helmfile completion bash)' >>~/.bashrc
+echo 'alias hf=helmfile' >>~/.bashrc
+echo 'complete -o default -F __start_helmfile hf' >>~/.bashrc
 echo -----------------------------------------
 echo completion and alias enabled successfully 
 echo -----------------------------------------
