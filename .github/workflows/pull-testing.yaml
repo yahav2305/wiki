@@ -1,0 +1,23 @@
+name: Pull Testing
+on: 
+  pull_request:
+    types:
+      - opened
+      - reopened
+    branches:
+      - 'main'
+jobs:
+  test:
+    runs-on: ubuntu-22.04
+    steps:
+    - name: Checkout Repo
+      uses: actions/checkout@v4
+      with:
+        submodules: true
+    - name: Setup Hugo
+      uses: peaceiris/actions-hugo@v3.0.0
+      with:
+        hugo-version: '0.127.0'
+        extended: true
+    - name: Test site build
+      run: hugo --minify
