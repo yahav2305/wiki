@@ -154,3 +154,26 @@ I access the Falco dashboard with the following commands:
 kubectl port-forward -n falco svc/falco-falcosidekick-ui 2802:2802
 ```
 And then enter `http://localhost:2802` in my browser.
+
+## Continuous Integration and Delivery (CI/CD) with GitHub Actions
+
+This section details the current implementation of our CI/CD pipeline using [GitHub Actions](https://docs.github.com/en/actions). GitHub Actions automates various tasks associated with the development lifecycle, streamlining the process from code commit to deployment.
+
+**Current Workflow:**
+
+* GitHub servers currently host the CI/CD pipeline execution.
+* Test execution is triggered for:
+    * Pull requests targeting the main branch.
+    * New commits directly pushed to the main branch.
+
+**Future Enhancements:**
+
+I acknowledge that testing on every commit is the ideal approach for comprehensive code coverage. However, limitations on free minutes for GitHub-hosted runners necessitate the current configuration.
+
+A planned migration to [ARC](https://github.com/actions/actions-runner-controller) will leverage our Kubernetes cluster for CI/CD execution. This transition will enable:
+
+* **Scalability:** The ability to scale runner capacity based on project needs.
+* **Reduced Costs:** Utilizing our own infrastructure for CI/CD reduces reliance on external resources.
+* **Improved Efficiency:**  Potentially faster test execution times due to dedicated runner resources.
+
+By migrating to ARC, I aim to achieve continuous testing on every commit, enhancing code quality and overall project stability.
