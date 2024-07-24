@@ -57,10 +57,12 @@ resources: {}
   #   memory: 128Mi
 
 livenessProbe:
+  enabled: true
   httpGet:
     path: /
     port: http
 readinessProbe:
+  enabled: true
   httpGet:
     path: /
     port: http
