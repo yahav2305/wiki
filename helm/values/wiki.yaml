@@ -4,7 +4,7 @@ image:
   repository: yahav2305/wiki
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "cf91b155c3e414f8b9a503081e70dbea7cde9fef"
+  tag: "189532981ed234b2e7d215112524254e7581bcfa"
 
 podSecurityContext: {}
   # fsGroup: 2000
