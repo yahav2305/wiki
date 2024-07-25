@@ -9,6 +9,7 @@ helm repo add openebs https://openebs.github.io/openebs
 helm repo add grafana https://grafana.github.io/helm-charts
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 helm repo add falcosecurity https://falcosecurity.github.io/charts
+helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
 helm repo update
 
 # Calico
@@ -17,6 +18,9 @@ helm upgrade calico projectcalico/tigera-operator --install --atomic --create-na
 # OpenEBS
 helm upgrade openebs openebs/openebs --install --atomic --create-namespace --values ./values/openebs.yaml --version 4.1.0 --namespace openebs
 kubectl patch storageclass openebs-hostpath -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}' # Set openebs storage class as default
+
+# Ingress-nginx
+helm upgrade ingress-nginx ingress-nginx/ingress-nginx --install --atomic --create-namespace --values ./values/ingress-nginx.yaml --version 4.11.1 --namespace ingress-nginx
 
 # Istio
 helm upgrade istio-base istio/base --install --atomic --create-namespace --values ./values/istio-base.yaml --version 1.22.2 --namespace istio-system

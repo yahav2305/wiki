@@ -5,11 +5,11 @@
   weight = 10
 
 [[main]]
-  name = "about"
+  name = "About"
   pageRef = "about"
   weight = 20
 
 [[main]]
-  name = "contact"
+  name = "Contact"
   pageRef = "contact"
   weight = 30
