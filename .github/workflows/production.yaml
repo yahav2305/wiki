@@ -61,15 +61,10 @@ jobs:
       with:
         version: 'v3.15.3'
       id: install
-    - name: Configure Git
+    - name: Package helm chart
       run: |
-        git config user.name "$GITHUB_ACTOR"
-        git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
-    - name: Package and push helm chart to github pages
-      uses: helm/chart-releaser-action@v1.6.0
-      with:
-        version: v1.6.0
-        charts_dir: helm/charts/wiki
-        pages_branch: helm-charts
-      env:
-        CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+        helm package ./helm/charts/wiki --version 1.0.0-${{ github.sha }} --app-version ${{ github.sha }}
+    - name: Push helm chart to GHCR
+      run: |
+        echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+        helm push wiki-1.0.0-${{ github.sha }}.tgz oci://ghcr.io/yahav2305
