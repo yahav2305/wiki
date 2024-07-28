@@ -66,5 +66,5 @@ jobs:
         helm package ./helm/charts/wiki --version 1.0.0-${{ github.sha }} --app-version ${{ github.sha }}
     - name: Push helm chart to GHCR
       run: |
-        echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-        helm push wiki-1.0.0-${{ github.sha }}.tgz oci://ghcr.io/yahav2305
+        echo "${{ secrets.GITHUB_TOKEN }}" | helm registry login ghcr.io/${{ github.actor }} -u ${{ github.actor }} --password-stdin
+        helm push ./wiki-1.0.0-${{ github.sha }}.tgz oci://ghcr.io/yahav2305
