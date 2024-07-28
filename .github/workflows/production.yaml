@@ -52,7 +52,7 @@ jobs:
           cache-to: type=gha,mode=max
   helm-package-and-push:
     runs-on: ubuntu-22.04
-    needs: docker-build-and-push
+    needs: test
     steps:
     - name: Checkout Repo
       uses: actions/checkout@v4
