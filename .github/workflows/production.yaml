@@ -66,18 +66,42 @@ jobs:
         helm package ./helm/charts/wiki --version 1.0.0-${{ github.sha }} --app-version ${{ github.sha }}
     - name: Push helm chart to GHCR
       run: |
-        echo "${{ secrets.GITHUB_TOKEN }}" | helm registry login ghcr.io/${{ github.actor }} -u ${{ github.actor }} --password-stdin
+        echo "${{ secrets.GITHUB_TOKEN }}" | helm registry login ghcr.io/yahav2305 -u ${{ github.actor }} --password-stdin
         helm push ./wiki-1.0.0-${{ github.sha }}.tgz oci://ghcr.io/yahav2305
   test-in-dev-namespace:
     runs-on: ubuntu-22.04
     needs: [test, docker-build-and-push, helm-package-and-push]
     steps:
-    - uses: azure/setup-kubectl@v4.0.0
+    - name: Checkout Repo
+      uses: actions/checkout@v4
+    - uses: azure/setup-helm@v4.2.0
       with:
-        version: '1.30.2'
+         version: 'v3.15.3'
       id: install
     - uses: azure/k8s-set-context@v4.0.0
       with:
         method: kubeconfig
         kubeconfig: ${{ secrets.KUBECONFIG_FILE }}
-        
+    - name: Login to ghcr
+      run: |
+        echo "${{ secrets.GITHUB_TOKEN }}" | helm registry login ghcr.io/yahav2305 -u ${{ github.actor }} --password-stdin
+    - name: Deploy wiki helm chart to dev namespace
+      run: |
+        helm upgrade --install wiki oci://ghcr.io/yahav2305/wiki \
+        --values ./helm/values/wiki.yaml --atomic \
+        --version 1.0.0-${{ github.sha }} \
+        --create-namespace --namespace dev-${{ github.sha }} \
+        --set ingress.enabled=false
+    - name: Test wiki helm chart
+      run: |
+        echo "WIP"
+    - name: Deploy wiki helm chart to prod namespace
+      run: |
+        helm upgrade --install wiki oci://ghcr.io/yahav2305/wiki \
+        --values ./helm/values/wiki.yaml --atomic \
+        --version 1.0.0-${{ github.sha }} \
+        --create-namespace --namespace default
+    - name: Delete dev namespace
+      if: always()
+      run: |
+        kubectl delete namespace dev-${{ github.sha }}
