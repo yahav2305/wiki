@@ -21,3 +21,10 @@ jobs:
         extended: true
     - name: Test site build
       run: hugo --minify
+    - name: Setup Helm
+      uses: azure/setup-helm@v3
+      with:
+        version: 'v3.15.3'
+      id: install
+    - name: Lint helm chart
+      run: helm lint helm/charts/wiki/ --values helm/values/wiki.yaml

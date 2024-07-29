@@ -7,3 +7,5 @@ Templates/
 dev/
 Dockerfile
 README.md
+helm/
+kubernetes/
