@@ -61,6 +61,23 @@ To initiate the deployment of Kubernetes resources and Helm charts, I execute th
 
 [Istio](https://istio.io/latest/) provides a service mesh with mutual TLS (mTLS) encryption for secure communication between pods. This safeguards against potential eavesdropping attempts on internal cluster network traffic. Istio efficiently manages its own certificates, minimizing operational overhead.
 
+## Ingress Management with Ingress Nginx
+
+The [Ingress Nginx](https://github.com/kubernetes/ingress-nginx) controller is currently utilized for managing ingress traffic within the cluster. This choice was driven by its:
+
+* **Simplicity:** Easy installation and configuration make Ingress Nginx a user-friendly option for basic ingress routing needs.
+
+However, future plans involve transitioning to the [Istio Ingress Gateway](https://istio.io/latest/docs/tasks/traffic-management/ingress/ingress-control/). This shift aligns with the long-term goal of implementing a comprehensive Istio service mesh for robust traffic management throughout the infrastructure.
+
+By leveraging Istio's Ingress Gateway, I aim to achieve:
+
+* **Unified Service Mesh:** Seamless integration with the existing Istio service mesh, enhancing consistency and control.
+* **Advanced Traffic Management:** Utilizing Istio's advanced capabilities for sophisticated traffic routing and security policies.
+
+This migration will further strengthen the infrastructure's ability to handle complex routing scenarios while maintaining a cohesive service mesh architecture.
+
+In order to utilize ingress-nginx, I specify `nginx` in spec.ingressClassName in an ingress object.
+
 ### Log Aggregation with Loki
 
 [Grafana Loki](https://grafana.com/oss/loki/) serves as the central repository for application and infrastructure logs generated across the Kubernetes cluster. Loki's suitability for semi-structured and unstructured data, prevalent in modern log formats, makes it a preferable choice over alternatives like Elasticsearch.

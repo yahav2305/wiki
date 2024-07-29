@@ -7,4 +7,4 @@ It is built with Go, and will be deployed on the cloud on Kubernetes.
 It will have CI/CD.
 
 See the following topics to get started.
-- [Kubernetes](kubernetes)
+- [Kubernetes](/kubernetes/)
