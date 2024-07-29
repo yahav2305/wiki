@@ -10,6 +10,7 @@ helm repo add grafana https://grafana.github.io/helm-charts
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 helm repo add falcosecurity https://falcosecurity.github.io/charts
 helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+helm repo add jetstack https://charts.jetstack.io
 helm repo update
 
 # Calico
@@ -42,6 +43,9 @@ helm upgrade protmail grafana/promtail --install --atomic --create-namespace --v
 
 # Falco
 helm upgrade falco falcosecurity/falco --install --atomic --create-namespace --values ./values/falco.yaml --version 4.6.3 --namespace falco
+
+# Cert-Manager
+helm upgrade cert-manager jetstack/cert-manager --install --atomic --create-namespace --values ./values.cert-manager.yaml --version v1.15.1 --namespace cert-manager --set crds.enabled=true
 
 # Kube-Bench
 kubectl apply -f ./resources/kube-bench.yaml
