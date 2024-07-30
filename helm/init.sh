@@ -45,7 +45,8 @@ helm upgrade protmail grafana/promtail --install --atomic --create-namespace --v
 helm upgrade falco falcosecurity/falco --install --atomic --create-namespace --values ./values/falco.yaml --version 4.6.3 --namespace falco
 
 # Cert-Manager
-helm upgrade cert-manager jetstack/cert-manager --install --atomic --create-namespace --values ./values.cert-manager.yaml --version v1.15.1 --namespace cert-manager --set crds.enabled=true
+helm upgrade cert-manager jetstack/cert-manager --install --atomic --create-namespace --values ./values/cert-manager.yaml --version v1.15.1 --namespace cert-manager --set crds.enabled=true
+kubectl apply -f ./resources/issuer.yaml
 
 # Kube-Bench
 kubectl apply -f ./resources/kube-bench.yaml
