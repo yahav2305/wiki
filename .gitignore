@@ -3,3 +3,4 @@ public/
 Templates/
 dev/
 .hugo_build.lock
+resources/

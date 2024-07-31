@@ -103,7 +103,7 @@ smartTOC = true
 [term]
   showHero = false
   # heroStyle = "background" # valid options: basic, big, background, thumbAndBackground
-  showBreadcrumbs = true
+  showBreadcrumbs = false
   showViews = false
   showLikes = false
   showTableOfContents = true
@@ -127,6 +127,7 @@ smartTOC = true
 [umamiAnalytics]
   # websiteid = "ABC12345"
   # domain = "llama.yoursite.com"
+  # dataDomains = "yoursite.com,yoursite2.com"
 
 [buymeacoffee]
   # identifier = ""
