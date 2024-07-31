@@ -10,7 +10,7 @@
 		"ghcr.io/devcontainers/features/git:1": {},
 		"ghcr.io/devcontainers/features/hugo:1": {
 			"extended": true,
-			"version": "0.127.0"
+			"version": "0.128.2"
 		},
 		"ghcr.io/devcontainers/features/terraform:1": {
 			"version": "1.9.0"
