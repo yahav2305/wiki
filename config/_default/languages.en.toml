@@ -15,7 +15,7 @@ title = "Yahav Deutsch"
 
 [author]
   name = "Yahav Deutsch"
-# image = "assets/logo-no-background.svg"
+  image = "img/YahavDeutsch.jpg"
   headline = "DevOps with a passion for automation and efficiency"
 links = [
     { github = "https://github.com/yahav2305" },
