@@ -8,16 +8,17 @@ title = "Yahav Deutsch"
   isoCode = "en"
   rtl = false
   dateFormat = "2 January 2006"
-  logo = "assets/logo-no-background.svg"
+  # logo = "img/logo.png"
+  # secondaryLogo = "img/secondary-logo.png"
   description = "Website that acts as a resume and as a source of knowledge for Yahav Deutsch"
   copyright = "TM © { year } - Yahav Deutsch - All rights reserved"
 
 [author]
   name = "Yahav Deutsch"
-# image = "assets/logo-no-background.svg"
+  image = "img/YahavDeutsch.jpg"
   headline = "DevOps with a passion for automation and efficiency"
 links = [
-    { github = "https://github.com/username" },
-    { linkedin = "https://linkedin.com/in/username" },
-    { email = "mailto:hello@your_domain.com" },
+    { github = "https://github.com/yahav2305" },
+    { linkedin = "https://linkedin.com/in/yahav-deustch" },
+    { email = "mailto:yahavd23@gmail.com" },
   ]
