@@ -1,6 +1,6 @@
 # Infrastructure for my wiki
 
-This document details the infrastructure components used to deploy and manage my wiki. 
+This document details the infrastructure components used to deploy and manage my website.
 
 ## Kubernetes Platform
 
