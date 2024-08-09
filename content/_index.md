@@ -10,4 +10,4 @@ This website is a comprehensive collection of my knowledge and experience as a D
 
 For visitors seeking to understand DevOps concepts and practices, I hope you find the information here valuable and insightful. For recruiters reviewing my resume or LinkedIn profile, I trust this site effectively showcases my expertise and capabilities.
 
-For more info about how I created the website and underlying infrastructure, visit the [about page](about).
+For more info about how I created the website and underlying infrastructure, visit the [about page](about/).
