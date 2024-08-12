@@ -22,3 +22,8 @@
   name = "Kubernetes"
   parent = "Subjects"
   pageRef = "kubernetes/"
+
+[[main]]
+  name = "Helm"
+  parent = "Subjects"
+  pageRef = "helm/"
